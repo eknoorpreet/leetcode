@@ -16,6 +16,7 @@ const threeSumClosest = function (nums, target) {
     let left = i + 1;
     let right = nums.length - 1;
     while (left < right) {
+      //comparing sum of 3 nums with target cam cause overflow
       const targetDiff = target - nums[i] - nums[left] - nums[right];
       //least diff => closest to 0
       if (targetDiff === 0) return target - targetDiff;
