@@ -14,6 +14,11 @@ const longestSubstr = (str, k) => {
       //map.size = k is fine ('baaaaaa', k = 2) => valid
       //slide/shrink the window (decrease its frequency)
       //as long as window (map) size is k again
+
+      //(here, had we tried to slide window without a hashmap, it would not have worked.
+      //For eg., we try to remove the first character ('a') of window to get to k distinct characters
+      //but no. of distinct characters is the same since there's one more 'a'. That's why storing frequencies
+      //is important. Furthemore, map size dictates distinct characters easily)
       map.set(str[start], map.get(str[start]) - 1);
       if (map.get(str[start]) === 0) {
         map.delete(str[start]); //update distinct characters
