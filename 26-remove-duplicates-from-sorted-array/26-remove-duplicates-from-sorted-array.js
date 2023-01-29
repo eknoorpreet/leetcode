@@ -16,6 +16,7 @@ const removeDuplicates = (nums) => {
   //sorted [] => worst-case => all are duplicates [2, 2, 2, 2]
   //=> result = atleast 1 unique element (2) => 1 => we start with 1
   let nextUniqueIdx = 1; //count of unique elements in our input array
+  //(first element at 0th index is always unique by itself)
   //modify nums in-place into an array with only unique elements
   //i.e. only insert if curr element is unique;
   //update the first nextUniqueIdx elements in an array with unique values and return the value of nextUniqueIdx.
