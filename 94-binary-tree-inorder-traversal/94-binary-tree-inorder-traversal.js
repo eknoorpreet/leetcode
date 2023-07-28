@@ -133,6 +133,8 @@ const inorderTraversal = function (root) {
       Purpose of stack: to process the most recently added value first
       If we keep pushing root's all left values to the stack, we'll have the leftmost values at the top
       When we pop off, we're processing leftmost values first. How far are we processing? As long as the node exists, we reach to its left. This way, a node being popped off must have had its left child already processed. How? We've added leftmost values to the stack until there are no more left. Popped node/node at end ("currentNode") has its left child dealt with (or doesn't exist), so we add it to result and work on its right child (add to stack to be processed later). Again, with the right child, we keep on pushing leftmost values to the stack until there are no more left and pop them off the stack one by one.  */
+
+  //if currentNode is null but stack is not empty, process/pop the element in stack and move to right (left (currentNode) already processed!)
   const result = [];
   if (!root) return result;
   const stack = new Stack();
@@ -142,7 +144,7 @@ const inorderTraversal = function (root) {
       stack.push(currentNode);
       currentNode = currentNode.left;
     }
-    //currentNode has its left child dealt with
+    //currentNode has its left child dealt with (null)
     currentNode = stack.pop();
     //push node to result
     result.push(currentNode.val);
@@ -151,3 +153,6 @@ const inorderTraversal = function (root) {
   }
   return result;
 };
+
+//TC: O(n)
+//SC: O(n)
