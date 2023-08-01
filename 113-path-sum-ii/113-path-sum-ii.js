@@ -75,4 +75,13 @@ The space complexity is determined by the maximum of the two components, which i
 
 So, in the case of a perfect binary tree, the space complexity of the code is O(N), where N is the number of nodes in the tree.
 
+
+Further explanation: Time: O(N^2), where N <= 5000 is the number of elements in the binary tree.
+
+First, we think the time complexity is O(N) because we only visit each node once.
+But we forgot to calculate the cost to copy the current path when we found a valid path, which in the worst case can cost O(N^2).
+
+Ref: https://leetcode.com/problems/path-sum-ii/solutions/1382332/c-python-dfs-clean-concise-time-complexity-explained/
+
+Extra Space (without counting output as space): O(H), where H is height of the binary tree. This is the space for stack recursion or keeping path so far.
 */
