@@ -31,25 +31,23 @@ const insertIntoBST = function (root, val) {
 //TC: O(h) or O(log n): At every step, we're going left or right
 //SC: O(h) or O(log n): The call stack!
 
-const insertIntoBSTInterative = function (root, val) {
-  if (!root) return new TreeNode(val);
+const insertIntoBSTIterative = function (root, val) {
   const newNode = new TreeNode(val);
-  let current = root;
+  if (!root) return newNode;
+  let curr = root;
   while (true) {
-    if (val < current.val) {
-      if (!current.left) {
-        current.left = newNode;
+    if (val < curr.val) {
+      if (!curr.left) {
+        curr.left = newNode;
         return root;
-      } else {
-        current = current.left;
       }
-    } else if (val > current.val) {
-      if (!current.right) {
-        current.right = newNode;
+      curr = curr.left;
+    } else {
+      if (!curr.right) {
+        curr.right = newNode;
         return root;
-      } else {
-        current = current.right;
       }
+      curr = curr.right;
     }
   }
 };
