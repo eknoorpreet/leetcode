@@ -31,7 +31,7 @@ const lowestCommonAncestor = function (root, p, q) {
     return lowestCommonAncestor(root.right, p, q);
   }
   //either the curr node is equal to p or q => that node is LCA
-  //or p lies on left and q lies on right (or vice-versa)
+  //or p lies on left and q lies on right (or vice-versa) (where the "split"" occurs)
   return root;
 };
 
