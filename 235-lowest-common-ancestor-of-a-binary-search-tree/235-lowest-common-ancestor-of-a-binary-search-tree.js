@@ -36,4 +36,4 @@ const lowestCommonAncestor = function (root, p, q) {
 };
 
 //TC: O(h) or O(log n)
-//SC: O(1)
+//SC: O(h) or O(log n)
