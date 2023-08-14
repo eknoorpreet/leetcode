@@ -125,16 +125,14 @@ KthLargest.prototype.add = function (val) {
 
 /*
   Time Complexity:
-  The insertion into the min heap takes O(log n) time for each element, and since there are n elements in the nums array, the total time complexity for the constructor is O(n * log n).
+  The insertion into the min heap takes O(log k) time for each element, and since there are n elements in the nums array, the total time complexity for the constructor is O(n * log k).
 
-  The add method inserts the new value into the min heap (which takes O(log n) time) and then checks if the heap size has exceeded k. If so, it removes the smallest element from the heap, which also takes O(log n) time. Therefore, the time complexity of the add method is O(log n). Asuming this function gets called m times, the time complexity is O(m * log n)
+  The add method inserts the new value into the min heap (which takes O(log k) time) and then checks if the heap size has exceeded k. If so, it removes the smallest element from the heap, which also takes O(log k) time. Therefore, the time complexity of the add method is O(log k). Asuming this function gets called m times, the time complexity is O(m * log k)
 
   Space Complexity:
-  KthLargest Constructor:
-  The space used by the min heap in the constructor is proportional to the number of elements inserted from the nums array. In the worst case, when all elements from the nums array are inserted, the space complexity for the min heap is O(n).
+  KthLargest Constructor: The space used by the min heap in the constructor is proportional to the number of elements inserted from the nums array. In the worst case, when all elements from the nums array are inserted, the space complexity for the min heap is O(n).
 
-  add Method:
-  The space complexity of the add method is primarily determined by the space used by the min heap. Since the heap stores at most k elements, the space complexity is O(k).
+  add Method: The space complexity of the add method is primarily determined by the space used by the min heap. Since the heap stores at most k elements, the space complexity is O(k).
   */
 
 /**
