@@ -62,6 +62,55 @@ const countSubIslands = function (grid1, grid2) {
   return subIslands;
 };
 
+//Approach 2:
+
+const countSubIslands2 = function (grid1, grid2) {
+  const visited = new Set(); //keep track of visited cells
+  const rows = grid1.length;
+  const cols = grid1[0].length;
+  let subIslands = 0;
+
+  const dfs = (r, c) => {
+    if (
+      r === rows ||
+      c === cols ||
+      r < 0 ||
+      c < 0 ||
+      grid2[r][c] === 0 ||
+      visited.has(`(${r}, ${c})`)
+    )
+      return;
+    visited.add(`(${r}, ${c})`);
+    dfs(r, c + 1);
+    dfs(r + 1, c);
+    dfs(r, c - 1);
+    dfs(r - 1, c);
+  };
+
+  //first remove all the non-common lands (mark them visited so we don't visit them when counting sub-islands)
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (grid2[r][c] === 1 && grid1[r][c] === 0) {
+        if (dfs(r, c)) subIslands++;
+      }
+    }
+  }
+
+  //counting sub-islands
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      //sub-islands are islands in grid2 so...
+      //if the current position in grid2 is a land and unvisited
+      if (grid2[r][c] === 1 && !visited.has(`(${r}, ${c})`)) {
+        //if it's a sub-island, increment the counter
+        dfs(r, c);
+        subIslands++;
+      }
+    }
+  }
+  return subIslands;
+};
+
 /*
 
   Time Complexity:
