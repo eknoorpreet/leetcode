@@ -79,4 +79,5 @@ visited Set: The visited set stores the visited cities during the DFS traversal.
 
 Recursive Call Stack: During the DFS traversal, the recursive call stack can have a depth of at most n. Therefore, the space complexity for the call stack is O(n).
 
+Overall, a space complexity of O(n) due to data structures like sets and maps.
 */
