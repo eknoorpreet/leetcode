@@ -23,7 +23,7 @@ const canFinish = function (numCourses, prerequisites) {
   //course mapped to its prerequisites
   //(adjacency list: node mapped to its edges)
   const prerequisiteMap = new Map();
-  const visited = new Set(); //to detect cycles
+  const cycle = new Set(); //to detect cycles
   for (let n = 0; n < numCourses; n++) {
     prerequisiteMap.set(n, []);
   }
@@ -33,23 +33,25 @@ const canFinish = function (numCourses, prerequisites) {
   }
   const dfs = (course) => {
     //base case: visiting a course twice (loop/cycle) => false
-    if (visited.has(course)) return false;
+    if (cycle.has(course)) return false;
     //base case: no prereqs => true (can be completed)
+    //here, instead of this condition, we can optionally use another set to check if it's been visited before like: if(visited.has(course)) return true
     if (!prerequisiteMap.get(course).length) return true;
-    visited.add(course);
+    cycle.add(course);
     for (let prereq of prerequisiteMap.get(course)) {
       //if one prereq cannot be completed => the course cannot be completed
       if (!dfs(prereq)) return false;
     }
     //already finished visiting the course
-    //Why remove the course from visited set? After going through all prereqs
-    //(and not returning false),
-    //we know that the course can be completed. but if the course remains in
-    //the visited set, it can be a problem for checking a future course
+    //Why remove the course from the cycle set? After going through all
+    //prereqs (and not returning false),
+    //we know that the course can be completed. But if the course remains in
+    //the cycle set, it can be a problem for checking a future course
     //(will say it's a cycle and return false) (See Note 1)
-    visited.delete(course);
+    cycle.delete(course);
     //course can be visited => set it to [] (denotes that no prereqs; can be completed)
-    //It's an optimization. If it's already determined that a prereq (for course 1) course, can be completeda nd it's also a prereq for course 2, we wouldn't have to go through the prereq's prereqs again since it's an empty list
+    //If it's already determined that a prereq (for course 1) course, can be completed nd it's also a prereq for course 2, we wouldn't have to go through the prereq's prereqs again since it's an empty list
+    //We're marking the course as 'visited'. We can also use another set to track visited courses and do visited.add(course) here instead of this condition
     prerequisiteMap.set(course, []);
     return true;
   };
@@ -61,13 +63,13 @@ const canFinish = function (numCourses, prerequisites) {
 
 /*
 
-Note 1: The reason for removing the course from the visited set after checking all its prerequisites is to ensure that we don't mistakenly consider it as part of a cycle when we move back up the recursive call stack.
+Note 1: The reason for removing the course from the cycle set after checking all its prerequisites is to ensure that we don't mistakenly consider it as part of a cycle when we move back up the recursive call stack.
 
 In a depth-first search (DFS) traversal of a graph, when we visit a node (in this case, a course), we mark it as visited to prevent infinite loops (cycles) in the graph. However, once we have explored all the paths stemming from that course and its prerequisites, we should remove it from the visited set.
 
-While recursively exploring the prerequisites of the course, if we encounter a course that is already in the visited set, it means we have encountered a cycle. Removing the course from the visited set allows us to backtrack properly and continue exploring other paths.
+While recursively exploring the prerequisites of the course, if we encounter a course that is already in the cycle set, it means we have encountered a cycle. Removing the course from the cycle set allows us to backtrack properly and continue exploring other paths.
 
-If we don't remove the course from the visited set after exploring all its prerequisites, we might falsely detect a cycle when we encounter the same course later in a different traversal path. Removing it ensures that each course is only considered once in the current traversal path.
+If we don't remove the course from the cycle set after exploring all its prerequisites, we might falsely detect a cycle when we encounter the same course later in a different traversal path. Removing it ensures that each course is only considered once in the current traversal path.
 
 
 Time Complexity:
