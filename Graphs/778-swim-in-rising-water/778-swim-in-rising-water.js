@@ -99,7 +99,6 @@ class MyPriorityQueue {
 
 const swimInWater = function (grid) {
   const n = grid.length;
-  const graph = new Map();
   // Initialize a set to keep track of visited nodes.
   const visited = new Set();
   const directions = [
