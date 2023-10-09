@@ -1,10 +1,33 @@
+/*
+
+Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+
+Example 1:
+
+Input: s = "anagram", t = "nagaram"
+Output: true
+
+Example 2:
+
+Input: s = "rat", t = "car"
+Output: false
+
+Constraints:
+
+1 <= s.length, t.length <= 5 * 104
+s and t consist of lowercase English letters.
+*/
+
 /**
  * @param {string} s
  * @param {string} t
  * @return {boolean}
  */
 
-//TC: O(nlogn)
+//TC: O(nlogn), where 'n' is the length of the longer string between s and t.
 //SC: O(1)
 // const isAnagram = function(s, t) {
 //     if(s.length !== t.length) return false
@@ -31,18 +54,21 @@
 //     return true
 // };
 
-//TC: O(s+t)
-//SC: O(s)
+// //TC: O(s + t) => O(s)
+// //SC: O(s)
 const isAnagram = function (s, t) {
   if (s.length !== t.length) return false;
   const charFrequency = new Map();
   for (let char of s) {
     charFrequency.set(char, (charFrequency.get(char) || 0) + 1);
   }
+  //if both (same length) strings have the same character count
+  //each char in hashmap should have 0 count after going through t and "undoing"
+  //its count
   for (let char of t) {
     charFrequency.set(char, charFrequency.get(char) - 1);
   }
-  for (let [char, frequency] of charFrequency.entries()) {
+  for (let frequency of charFrequency.values()) {
     if (frequency > 0) return false;
   }
   return true;
