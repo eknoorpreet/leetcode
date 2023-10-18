@@ -171,3 +171,6 @@ const topKFrequent = function (nums, k) {
 
   return result;
 };
+
+//TC: O(n)
+//SC: O(n)
