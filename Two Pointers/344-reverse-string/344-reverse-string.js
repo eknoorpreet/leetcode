@@ -32,17 +32,17 @@ const reverseString1 = function (s) {
   return s.reverse();
 };
 
-const reverseString0 = function (s) {
-  let i = 0;
-  let j = s.length - 1;
-  while (i < j) {
+const reverseString = function (s) {
+  let left = 0;
+  let right = s.length - 1;
+  while (left < right) {
     //swap 0th and last chars and so on...
-    [s[i], s[j]] = [s[j], s[i]];
-    // let temp = s[i]
-    // s[i] = s[j]
-    // s[j] = temp
-    i++;
-    j--;
+    [s[left], s[right]] = [s[right], s[left]];
+    // let temp = s[left]
+    // s[left] = s[right]
+    // s[right] = temp
+    left++;
+    right--;
   }
   return s;
 };
