@@ -42,17 +42,6 @@ Constraints:
  * @return {number}
  */
 
-// const minimumDifference = function(nums, k) {
-//    nums.sort((a, b) => a - b)
-//     let minDiff = Number.POSITIVE_INFINITY
-//     let start = 0
-//     for(let end = k - 1; end < nums.length; end++) {
-//         minDiff = Math.min(minDiff, nums[end] - nums[start])
-//         start++
-//     }
-//     return minDiff
-// };
-
 const minimumDifference = function (nums, k) {
   nums.sort((a, b) => a - b);
   let minDiff = Number.POSITIVE_INFINITY;
@@ -67,5 +56,17 @@ const minimumDifference = function (nums, k) {
   return minDiff;
 };
 
-//TC: O(n)
+//Another way: start when you've reached the first window (k elements)
+const minimumDifference0 = function (nums, k) {
+  nums.sort((a, b) => a - b);
+  let minDiff = Number.POSITIVE_INFINITY;
+  let start = 0;
+  for (let end = k - 1; end < nums.length; end++) {
+    minDiff = Math.min(minDiff, nums[end] - nums[start]);
+    start++;
+  }
+  return minDiff;
+};
+
+//TC: O(nlogn + n) => O(nlogn)
 //SC: O(1)
