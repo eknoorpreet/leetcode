@@ -35,7 +35,7 @@ s consists only of printable ASCII characters.
 
 //TC: O(n)
 const isPalindrome0 = function (s) {
-  //convert uppercase to lowercase, remove alphanumeric characters from string
+  //convert uppercase to lowercase, remove non-alphanumeric characters from string
   s = s.toLowerCase().replace(/[^a-z0-9]/g, ''); //O(n)
   return s === [...s].reverse().join(''); //O(n)
 };
@@ -44,6 +44,7 @@ const isPalindrome0 = function (s) {
 const isPalindrome1 = function (s) {
   let reversed = '';
 
+  //convert uppercase to lowercase, remove non-alphanumeric characters from string
   s = s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
   for (let i = s.length - 1; i >= 0; i--) {
@@ -54,12 +55,12 @@ const isPalindrome1 = function (s) {
 };
 
 const isPalindrome = function (s) {
-  //convert uppercase to lowercase, remove alphanumeric characters from string
+  //convert uppercase to lowercase, remove non-alphanumeric characters from string
   s = s.toLowerCase().replace(/[^a-z0-9]/g, '');
   //use two pointers to iterate from both front and back and check if respective chars match
   let left = 0;
   let right = s.length - 1;
-  while (left <= right) {
+  while (left < right) {
     //if respective chars match,check the next ones
     if (s[left] === s[right]) {
       left++;
