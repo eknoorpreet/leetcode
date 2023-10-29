@@ -55,11 +55,12 @@ const mergeAlternately = function (word1, word2) {
     i++;
     j++;
   }
-  //if word2 exhausted
+  //if word2 was exhausted
   while (i < word1.length) {
     result += word1[i];
     i++;
   }
+  //if word1 was exhausted
   while (j < word2.length) {
     result += word2[j];
     j++;
@@ -80,5 +81,5 @@ const mergeAlternately1 = function (word1, word2) {
   }
   return result;
 };
-//TC: O(n)
-//S: O(1)
+//TC: O(m + n) or O(n), where n is the length of the larger string
+//S: O(m + n)
