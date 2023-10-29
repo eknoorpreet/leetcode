@@ -47,27 +47,13 @@ nums is sorted in non-decreasing order.
 
 */
 
-// /**
-//  * @param {number[]} nums
-//  * @return {number}
-//  */
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
 
+//Easy to understand
 const removeDuplicates0 = function (nums) {
-  //keep track of the position where the next unique element should be placed in the modified array.
-  let nextUnique = 2; // Initialize k to 2 (since 0th and 1st elements are fine)
-  for (let i = 2; i < nums.length; i++) {
-    // Check if the current element is different from the previous two elements
-    //if it's different, place it
-    console.log(i, nextUnique, nums[i], nums[nextUnique - 2]);
-    if (nums[i] !== nums[nextUnique - 2]) {
-      nums[nextUnique] = nums[i]; // Place the current element
-      nextUnique++;
-    }
-  }
-  return nextUnique;
-};
-
-const removeDuplicates = function (nums) {
   // Check if it is an empty array
   if (nums.length === 0) return 0;
 
@@ -81,6 +67,8 @@ const removeDuplicates = function (nums) {
     //if curr and prev elements are same => a duplicate is found.
     if (nums[i] === nums[i - 1]) {
       //if count is less than 2, we can include the current element in the result array
+      //In "sorted array I", we only placed when we found a different element. Here, even if
+      //we find the same element as the one before, we will place it as long it appears twice
       if (count < 2) {
         //place it!
         nums[nextUnique] = nums[i];
@@ -90,10 +78,28 @@ const removeDuplicates = function (nums) {
       count++;
     } else {
       //curr and prev elements are diff => a new unique element found
-      //reset count to 1 new unique element
+      //reset count to 1 for the new unique element
       count = 1;
       //place it
       nums[nextUnique] = nums[i];
+      nextUnique++;
+    }
+  }
+  return nextUnique;
+};
+
+//Concise
+const removeDuplicates = function (nums) {
+  //keep track of the position where the next unique element should be placed in the modified array.
+  let nextUnique = 2; // Initialize k to 2 (since 0th and 1st elements are fine)
+  for (let i = 2; i < nums.length; i++) {
+    // Check if the current element is different from the previous two elements
+    // nextUnique depicts the point at which the next proper element is going to be
+    // placed and before this point, the array is okay.
+    // if curr element (nums[i]) is same as nums[nextUnique - 2], this means that this must
+    // be the 3rd occurrence of the element => skip! If it's a different element => place it!
+    if (nums[i] !== nums[nextUnique - 2]) {
+      nums[nextUnique] = nums[i]; // Place the current element
       nextUnique++;
     }
   }
