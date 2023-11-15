@@ -66,8 +66,9 @@ const maxFrequency = function (nums, k) {
   for (let end = 0; end < nums.length; end++) {
     windowSum += nums[end];
     // We want to increase all the numbers in the window to equal nums[end]
-    // number of operations = (end - start + 1) * nums[end] - windowSum, which should be <= k
-    // The goal is to make this value less than or equal to k.
+    // Ex: [4,4,4], sum = 12. Basically, sum = windowSize * currElement
+    // Therefore, number of operations = (end - start + 1) * nums[end] - windowSum, which
+    //should be <= k. The goal is to make this value less than or equal to k.
 
     // If below condition is false => fine! you can perform <= k oprations
     // But if the calculated number of operations exceeds k, increment the start pointer and
