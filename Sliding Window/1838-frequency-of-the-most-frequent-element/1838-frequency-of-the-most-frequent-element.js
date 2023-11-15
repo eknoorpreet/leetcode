@@ -46,6 +46,8 @@ Constraints:
 
 "operation": increment the element by 1
 
+Create a window and in that window, try to make all elements equal to the curr element!
+
 By sorting the array, we create a situation where, if we have an element nums[end] and
 all elements less than nums[end] are to its left, and all elements greater than
 nums[end] are to its right, we can easily determine the operations needed to make all elements within a window equal to nums[end].
