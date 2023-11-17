@@ -46,7 +46,7 @@ Intuition:
 
 The key idea is to identify the days when it's profitable to buy and sell the stock.
 You don't need to track the specific buy and sell days; instead, you accumulate profits whenever
-pthere's an opportunity to do so.
+there's an opportunity to do so.
 
 */
 
