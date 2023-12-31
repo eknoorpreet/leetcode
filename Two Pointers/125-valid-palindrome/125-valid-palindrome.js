@@ -33,7 +33,6 @@ s consists only of printable ASCII characters.
  * @return {boolean}
  */
 
-//TC: O(n)
 const isPalindrome0 = function (s) {
   //convert uppercase to lowercase, remove non-alphanumeric characters from string
   s = s.toLowerCase().replace(/[^a-z0-9]/g, ''); //O(n)
@@ -54,6 +53,19 @@ const isPalindrome1 = function (s) {
   return s === reversed;
 };
 
+/*
+
+TC: O(n^2)
+
+Explanation:
+
+String concatenation is not constant time. Every “+=“ operation you are effectively creating
+a new string of length+1 and storing it in 'reversed'.
+
+The time to copy the previous 'reversedString' is 1 + 2 + … + n = n*(n+1)/2 = O(n^2)
+since each iteration of the loop you are copying one more character than the previous.
+
+*/
 const isPalindrome = function (s) {
   //convert uppercase to lowercase, remove non-alphanumeric characters from string
   s = s.toLowerCase().replace(/[^a-z0-9]/g, '');
