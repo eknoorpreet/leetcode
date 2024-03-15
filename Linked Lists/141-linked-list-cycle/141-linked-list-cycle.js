@@ -63,17 +63,26 @@ const hasCycle0 = function(head) {
     return false
 }
 
-const hasCycle = function(head) {
-    let slow = head
-    let fast = head
-    while(fast !== null && fast.next !== null) {
-        slow = slow.next
-        fast = fast.next.next
-        if(slow === fast) return true
+/*Approach: If cycle exists => fast (taking 2 steps at a time) and slow (taking 1 step at a time) will eventually
+meet. If no cycle => fast will reach the end (fast.next = null) before slow.*/
+
+const hasCycle = function (head) {
+    let slow = head;
+    let fast = head;
+    //as long as fast has not reached the end (if it exists)
+    while (fast !== null && fast.next !== null) {
+      //move the pointer by 2 steps
+      fast = fast.next.next;
+      //move the pointer by 1 step
+      slow = slow.next;
+      //eventually they meet => cycle exists!
+      if (slow === fast) return true;
     }
-    // If fast ever becomes null (loop finishes) => no cycle!
-    return false
-};
+    //end reached => no cycle
+    return false;
+  };
+
+hasCycle([3, 2, 0, -4]); //(-4 points to 2 in the diagram) //true
 
 /*Time Complexity: Once the slow pointer enters the cycle, the fast pointer will meet the
 slow pointer in the same loop. Therefore, the time complexity of our algorithm will be O(n)
