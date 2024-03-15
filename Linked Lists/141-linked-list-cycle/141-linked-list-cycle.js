@@ -75,5 +75,8 @@ const hasCycle = function(head) {
     return false
 };
 
-//TC: O(n)
-//SC: O(1)
+/*Time Complexity: Once the slow pointer enters the cycle, the fast pointer will meet the
+slow pointer in the same loop. Therefore, the time complexity of our algorithm will be O(n)
+where n is the number of nodes in the LinkedList.
+
+Space Complexity: Constant space O(1). */
