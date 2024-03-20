@@ -32,45 +32,66 @@ The list is guaranteed to be sorted in ascending order.
  * @return {ListNode}
  */
 
-const deleteDuplicates = (head) => {
-    const dummy = new ListNode(0, head);
-    // We don't just want to exclude the 2nd occurrence of duplicates
-    // We want to remove ALL occurrences!
-    // [1,2,3,3,4,4,5] => [1, 2, 5]
-    // Therefore, a pointer to stop at the current unique value
-    let previous = dummy;
-    // A pointer to process the current node's next duplicate values
-    // If there are duplicates to this node, we don't want to include this node!
-    let current = head; // dummy.next
+const deleteDuplicates0 = (head) => {
+  const dummy = new ListNode(0, head);
+  // We don't just want to exclude the 2nd occurrence of duplicates
+  // We want to remove ALL occurrences!
+  // [1,2,3,3,4,4,5] => [1, 2, 5]
+  // Therefore, a pointer to stop at the current unique value
+  let previous = dummy;
+  // A pointer to process the current node's next duplicate values
+  // If there are duplicates to this node, we don't want to include this node!
+  let current = head; // dummy.next
 
-    // As long as the current node exists
-    while (current) {
-        let nextNode = current.next;
-        let nodesSkipped = false // or duplicateFound
-        // And the next exists and they are duplicates
-        // Skip all duplicate nodes
-        while (nextNode && current.val === nextNode.val) {
-            nextNode = nextNode.next
-            nodesSkipped = true
-        }
-
-        // Alternatively, if(current.next === nextNode)
-        // current.next is still nextNode?
-        // => no duplicates => update previous to be current
-        if (!nodesSkipped) {
-            previous = current;
-        } else {
-            // else, duplicates => link previous to nextNode
-            // (which now has the next unique)
-            previous.next = nextNode;
-            // Since we are not including this node (as it has duplicates)
-            // Lose the reference!
-            // current = null;
-        }
-        current = nextNode;
+  // As long as the current node exists
+  while (current) {
+    let nextNode = current.next;
+    let nodesSkipped = false; // or duplicateFound
+    // And the next exists and they are duplicates
+    // Skip all duplicate nodes
+    while (nextNode && current.val === nextNode.val) {
+      nextNode = nextNode.next;
+      nodesSkipped = true;
     }
-    return dummy.next;
-}
+
+    // Alternatively, if(current.next === nextNode)
+    // current.next is still nextNode?
+    // => no duplicates => update previous to be current
+    if (!nodesSkipped) {
+      previous = current;
+    } else {
+      // else, duplicates => link previous to nextNode
+      // (which now has the next unique)
+      previous.next = nextNode;
+      // Since we are not including this node (as it has duplicates)
+      // Lose the reference!
+      // current = null;
+    }
+    current = nextNode;
+  }
+  return dummy.next;
+};
+
+// Same approach, slight variation (Uou can directly move the curr pointer)
+const deleteDuplicates = (head) => {
+  let dummyHead = new ListNode(0, head);
+  let prev = dummyHead;
+  let curr = head;
+  while (curr) {
+    let nodesSkipped = false;
+    while (curr && curr.next && curr.val === curr.next.val) {
+      curr = curr.next;
+      nodesSkipped = true;
+    }
+    if (!nodesSkipped) {
+      prev = curr;
+    } else {
+      prev.next = curr.next;
+    }
+    curr = curr.next;
+  }
+  return dummyHead.next;
+};
 
 // TC: O(n)
 // SC: O(1)
