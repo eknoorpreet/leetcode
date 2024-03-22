@@ -38,7 +38,7 @@ The number of nodes in the list is n.
  * @return {ListNode}
  */
 
-const swapNodes0 = function (head, k) {
+const swapNodes = function (head, k) {
   let dummy = new ListNode(null, head);
   let left = head; // Kth node of the Linked List
   let preLeft = dummy; // (K - 1)th node of the Linked List
@@ -69,37 +69,6 @@ const swapNodes0 = function (head, k) {
   // Both nodes are the same? => No need to swap
   if (left === right) {
     return head;
-  }
-
-  preLeft.next = right; // 1 -> 4
-  preRight.next = left; // 3 -> 2
-  let temp = left.next; // 3
-  left.next = right.next; // 2 -> 5
-  right.next = temp; // 4 -> 3
-
-  return dummy.next;
-};
-
-const swapNodes = function (head, k) {
-  if (!head || !head.next) return head;
-  let dummy = new ListNode(0, head);
-  let preLeft = dummy;
-  let left = head;
-  let preRight = dummy;
-  let right = head;
-
-  let i = 0;
-  while (i < k - 1) {
-    preLeft = left;
-    left = left.next;
-    i++;
-  }
-
-  let currentNode = left;
-  while (currentNode.next) {
-    preRight = preRight.next;
-    right = right.next;
-    currentNode = currentNode.next;
   }
 
   preLeft.next = right; // 1 -> 4
