@@ -142,3 +142,6 @@ const reverseEvenLengthGroups = function (head) {
   }
   return head;
 };
+
+//TC: O(n)
+//SC: O(1)
