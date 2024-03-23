@@ -96,24 +96,27 @@ const getIntersectionNode0 = function (headA, headB) {
 
 const getIntersectionNode = function (headA, headB) {
   let currA = headA;
-  let currB = headB;
   let lengthA = 0;
   let lengthB = 0;
 
+  //determine the length of listA
   while (currA) {
     currA = currA.next;
     lengthA++;
   }
 
+  //determine the length of listB
+  let currB = headB;
   while (currB) {
     currB = currB.next;
     lengthB++;
   }
 
   let diff = 0;
-  let longListPtr;
-  let shortListPtr;
+  let longListPtr = null; //working pointer for the longer list
+  let shortListPtr = null; //working pointer for the shorter list
 
+  //dtermine the longer list
   if (lengthA > lengthB) {
     diff = lengthA - lengthB;
     longListPtr = headA;
@@ -124,17 +127,24 @@ const getIntersectionNode = function (headA, headB) {
     shortListPtr = headA;
   }
 
-  while (diff !== 0) {
+  //adjust the working pointer of the longer list by the difference
+  //so both pointers are equidistant from the point of intersection
+  while (diff != 0) {
     longListPtr = longListPtr.next;
     diff--;
   }
-  while (longListPtr && shortListPtr) {
-    if (longListPtr === shortListPtr) return longListPtr;
-    else {
+  //traverse through the list
+  while (longListPtr) {
+    //meeting point ? => return it
+    if (longListPtr === shortListPtr) {
+      return longListPtr;
+    } else {
+      //else keep moving forward
       longListPtr = longListPtr.next;
       shortListPtr = shortListPtr.next;
     }
   }
+  //no meeting point ? => return null
   return null;
 };
 
