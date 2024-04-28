@@ -17,6 +17,16 @@ You must solve the problem without using the built-in queue data structure in yo
 
 */
 
+/*
+
+Intuition:
+
+We use a linked list instead of an array. If we used an array, we would have to create one of size k but for linked list, it can be of any size initially with a maximum capacity of size k.
+
+We used a doubly linked list as it becomes easier to work with the prev pointer.
+
+*/
+
 /**
  * @param {number} k
  */
