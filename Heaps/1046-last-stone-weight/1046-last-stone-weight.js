@@ -107,6 +107,17 @@ const lastStoneWeight = function (stones) {
 };
 
 /*
+
+Explanation:
+
+Why second <= largest and not second != largest ? In the second method, if we have [2, 2],
+we smash them and now the max heap is empty but we need to return 2.
+Then, we need to do maxHeap.peek() ?? 0 .
+To avoid that, we can use the first method and add 0s to the heap as well.
+
+*/
+
+/*
   Time Complexity:
   The insertion into the min heap takes O(log n) time for each element, and since there are n elements in the nums array, the time complexity is O(n * log n).
 
