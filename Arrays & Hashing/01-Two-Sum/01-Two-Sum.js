@@ -51,19 +51,7 @@ Only one valid answer exists.
 // };
 
 //TC: O(n)
-//SC: O(n)
-const twoSum1 = function (nums, target) {
-  const map = new Map();
-  for (let i = 0; i < nums.length; i++) {
-    //A + B = target. We store [A, A's index]
-    //we store {2 => 0}.
-    //We try to find B. Is the curr char a B, i.e. for B, does A (= target - B) already exist in hashmap => [A's index, B's/curr index] [map.get(target - B), i]
-    //2nd iteration: If map has 9 - 7 = 2, return [2's index, curr index]
-    if (map.has(target - nums[i])) return [map.get(target - nums[i]), i];
-    else map.set(nums[i], i);
-  }
-};
-
+//SC: O(1)
 // const twoSum = function (nums, target) {
 //   const map = new Map()
 //   for(let i = 0; i < nums.length; i++) {
@@ -72,13 +60,14 @@ const twoSum1 = function (nums, target) {
 //   }
 // };
 
+//TC: O(n)
+//SC: O(1)
 const twoSum = function (nums, target) {
   const map = new Map();
   for (let i = 0; i < nums.length; i++) {
-    //A + B = target. We store [A, A's index]
-    //we store {2 => 0}.
-    //We try to find B. Is the curr char a B, i.e. for B, does A (= target - B) already exist in hashmap => [A's index, B's/curr index] [map.get(target - B), i]
-    //2nd iteration: If map has 9 - 7 = 2, return [2's index, curr index]
+    //A + B = target. We store [A, A's index] {2 => 0}
+    //We try to find B (= target - A).
+    //If map has 9 - 7 = 2, return [2's index, curr index]
     if (map.has(target - nums[i])) return [map.get(target - nums[i]), i];
     else map.set(nums[i], i);
   }
