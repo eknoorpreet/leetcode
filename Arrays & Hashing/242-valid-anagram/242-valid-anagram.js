@@ -34,8 +34,21 @@ s and t consist of lowercase English letters.
 //     return [...s].sort().join("") === [...t].sort().join("")
 // };
 
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+
+//TC: O(nlogn)
+//SC: O(n)
+// const isAnagram = function(s, t) {
+//     if(s.length !== t.length) return false
+//     return [...s].sort().join("") === [...t].sort().join("")
+// };
+
 //TC: O(s)
-//SC: O(s + t)
+//SC: O(k), where k is number of unique characters
 // const isAnagram = function(s, t) {
 //     if(s.length !== t.length) return false
 //     const sMap = new Map() //count frequencies of chars in s
@@ -54,22 +67,27 @@ s and t consist of lowercase English letters.
 //     return true
 // };
 
-// //TC: O(s + t) => O(s)
-// //SC: O(s)
+//TC: O(s)
+//SC: O(k), where k is number of unique characters
 const isAnagram = function (s, t) {
   if (s.length !== t.length) return false;
   const charFrequency = new Map();
   for (let char of s) {
     charFrequency.set(char, (charFrequency.get(char) || 0) + 1);
   }
-  //if both (same length) strings have the same character count
-  //each char in hashmap should have 0 count after going through t and "undoing"
-  //its count
   for (let char of t) {
     charFrequency.set(char, charFrequency.get(char) - 1);
   }
-  for (let frequency of charFrequency.values()) {
+  for (let [char, frequency] of charFrequency.entries()) {
     if (frequency > 0) return false;
   }
   return true;
 };
+
+/*
+
+While both solutions have the same big-O complexity,
+Solution 2 is more space-efficient and likely to be marginally faster in practice
+due to fewer operations and better memory usage.
+
+*/
