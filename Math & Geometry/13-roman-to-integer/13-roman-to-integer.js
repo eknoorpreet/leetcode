@@ -64,11 +64,12 @@ const romanToIntMap = {
 const romanToInt = function (s) {
   let result = 0; // result
   for (let i = 0; i < s.length; i++) {
-    let currInt = romanToIntMap[s[i]];
-    let nextInt = s[i + 1] ? romanToIntMap[s[i + 1]] : 0;
+    const currInt = romanToIntMap[s[i]];
+    const nextInt = s[i + 1] ? romanToIntMap[s[i + 1]] : null;
     // Is the curr int followed by a larger int? => Subtract it
-    if (s[i + 1] && currInt < nextInt) {
+    if (nextInt !== null && currInt < nextInt) {
       // Instead of doing result + (next - curr), we can just do: result - curr
+      // (and then add next when we get to it)
       // (since we're on the curr element)
       result -= currInt;
     } else {
