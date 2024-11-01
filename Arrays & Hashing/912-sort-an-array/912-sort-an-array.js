@@ -51,13 +51,15 @@ function merge(arr1, arr2) {
     }
   }
 
-  //push remaining elements from arr1 to the results array.
+  // If arr1 has remaining elements, then arr2 must have been exhausted
+  // Handle remaining elements of arr1
   while (i < arr1.length) {
     results.push(arr1[i]);
     i++;
   }
 
-  //push remaining elements from arr2 to the results array.
+  // If arr2 has remaining elements, then arr1 must have been exhausted
+  // Handle remaining elements of arr2
   while (j < arr2.length) {
     results.push(arr2[j]);
     j++;
@@ -82,17 +84,16 @@ const sortArray = function (nums) {
 
 /*
 
-Time Complexity (TC): O(n log n)
+Time Complexity: O(n log n)
 
-The code uses the merge sort algorithm, which has a time complexity of O(n log n) in the worst case.
- This is because the array is divided into smaller subarrays recursively until single-element subarrays are reached (log n levels), and then those subarrays are merged together (n comparisons at each level).
+log n levels of recursion (splitting)
+n comparisons at each level (merging)
+Hence, n * log n total operations
 
- Space Complexity (SC): O(n)
+Space Complexity: O(n)
 
-The space complexity is determined by the additional memory required for the recursive function
-calls and the merging process. Each recursive call creates a new set of subarrays
-(for the left and right halves), and this can consume space. Additionally, the merge function
-creates a new results array to store the merged values. In total, the space complexity is O(n),
-as it grows linearly with the size of the input array.
+Needs extra space for the merged arrays
+Recursive call stack uses O(log n)
+Total space is O(n)
 
 */
