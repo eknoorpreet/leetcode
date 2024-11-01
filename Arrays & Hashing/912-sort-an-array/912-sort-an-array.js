@@ -76,8 +76,8 @@ const sortArray = function (nums) {
   let mid = Math.floor(nums.length / 2);
   //recursively splits the array into two subarrays, left and right
   //sort the left and right subarrays
-  let left = sortArray(nums.slice(0, mid));
-  let right = sortArray(nums.slice(mid));
+  let sortedLeft = sortArray(nums.slice(0, mid));
+  let sortedRight = sortArray(nums.slice(mid));
   //merge the left and right subarrays
   return merge(left, right);
 };
