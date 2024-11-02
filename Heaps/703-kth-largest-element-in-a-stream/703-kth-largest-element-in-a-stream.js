@@ -105,10 +105,6 @@ const KthLargest = function (k, nums) {
   nums.forEach((num) => {
     this.add(num);
   });
-  // nums.forEach(num => {
-  //   this.minHeap.insert(num)
-  // })
-  // while(this.minHeap.values.length > this.k) this.minHeap.extractMin()
 };
 
 /**
