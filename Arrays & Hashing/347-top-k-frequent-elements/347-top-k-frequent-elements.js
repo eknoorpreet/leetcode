@@ -118,6 +118,26 @@ class MyPriorityQueue {
 }
 
 const topKFrequent0 = function (nums, k) {
+  const numFrequency = new Map();
+  const result = [];
+  for (const num of nums) {
+    numFrequency.set(num, (numFrequency.get(num) || 0) + 1);
+  }
+
+  // Sort by frequency - O(m log m) where m is unique numbers
+  const sorted = Array.from(numFrequency.entries()).sort((a, b) => b[1] - a[1]);
+
+  // Get top k elements - O(k)
+  for (const [num, frequency] of sorted) {
+    if (k > 0) {
+      result.push(num);
+      k--;
+    }
+  }
+  return result;
+};
+
+const topKFrequent1 = function (nums, k) {
   const map = new Map();
   const pq = new MyPriorityQueue();
   for (let i = 0; i < nums.length; i++) {
@@ -132,14 +152,26 @@ const topKFrequent0 = function (nums, k) {
   return result;
 };
 
-//bucket sort
+/*
+
+Time Complexity:
+
+Current solution: O(n log n) due to sorting
+
+Space Complexity: O(n) space
+*/
+
+/*
+
+The key insight with bucket sort is that we're using array indices as our "sorting" mechanism, which gives us O(1) access and effectively sorts without comparisons.
+
+*/
 
 const topKFrequent = function (nums, k) {
-  // Step 1: Create a frequency map
-  // to count the occurrences of each element in the array
-  const frequencyMap = new Map();
+  // Step 1: Create a frequency map to count the occurrences of each element in the array
+  const numFrequency = new Map();
   for (const num of nums) {
-    frequencyMap.set(num, (frequencyMap.get(num) || 0) + 1);
+    numFrequency.set(num, (numFrequency.get(num) || 0) + 1);
   }
 
   // Step 2: Create an array of buckets
@@ -148,7 +180,8 @@ const topKFrequent = function (nums, k) {
   // of the bucket represents the frequency of the elements it contains.
   // [ <1 empty item>, [ 3 ], [ 2 ], [ 1 ], <3 empty items> ]
   const buckets = new Array(nums.length);
-  for (const [num, freq] of frequencyMap) {
+  for (const [num, freq] of numFrequency) {
+    // Using the frequency as an index
     if (!buckets[freq]) {
       buckets[freq] = [];
     }
@@ -163,8 +196,9 @@ const topKFrequent = function (nums, k) {
   for (let i = buckets.length - 1; i >= 0 && k > 0; i--) {
     // if a bucket exists
     if (buckets[i]) {
-      // add its elements to the result array until k elements are collected.
+      // Add its elements to the result array until k elements are collected.
       result.push(...buckets[i]);
+      // Decrement k by the number of items added
       k -= buckets[i].length;
     }
   }
@@ -172,5 +206,10 @@ const topKFrequent = function (nums, k) {
   return result;
 };
 
-//TC: O(n)
-//SC: O(n)
+/*
+
+Time Complexity: O(n) as all operations are linear
+
+Space Complexity: O(n) space
+
+*/
