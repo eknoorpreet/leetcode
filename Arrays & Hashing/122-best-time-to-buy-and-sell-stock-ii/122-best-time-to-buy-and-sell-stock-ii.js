@@ -44,9 +44,30 @@ Constraints:
 
 Intuition:
 
-The key idea is to identify the days when it's profitable to buy and sell the stock.
-You don't need to track the specific buy and sell days; instead, you accumulate profits whenever
+Since we can buy and sell on the same day, instead of trying to find optimal buy-sell pairs, we can simply collect ALL positive price differences between consecutive days.
+Any price increase represents a potential profit we should take. Just accumulate profits whenever
 there's an opportunity to do so.
+
+prices = [7,1,5,3,6,4]
+
+i=1: prices[1]=1, prices[0]=7
+     1-7 = -6 (negative, skip)
+
+i=2: prices[2]=5, prices[1]=1
+     5-1 = 4 (positive, add to profit)
+     profit = 4
+
+i=3: prices[3]=3, prices[2]=5
+     3-5 = -2 (negative, skip)
+
+i=4: prices[4]=6, prices[3]=3
+     6-3 = 3 (positive, add to profit)
+     profit = 4 + 3 = 7
+
+i=5: prices[5]=4, prices[4]=6
+     4-6 = -2 (negative, skip)
+
+Final profit = 7
 
 */
 
@@ -63,5 +84,12 @@ const maxProfit = function (prices) {
   }
   return profit;
 };
-//TC: O(n)
-//SC: O(1)
+
+/*
+
+Time & Space Complexity:
+
+Time: O(n) - we make one pass through the array
+Space: O(1) - we only use one variable for profit
+
+*/
