@@ -90,6 +90,14 @@ class MaxHeap {
   }
 }
 
+/*
+
+1. Push stones to a max heap.
+2. As long as the heap has more than 1 element, extract the largest and second largest stones. If second <= largest , insert the difference.
+3. When the loop ends, there’s only 1 stone left. Return that.
+
+*/
+
 const lastStoneWeight = function (stones) {
   const maxHeap = new MaxHeap();
   stones.forEach((stone) => maxHeap.insert(stone));
