@@ -103,6 +103,38 @@ class MinHeap {
 //   return minHeap.peek();
 // };
 
+/*
+
+To find 2nd largest in [3,2,1,5,6,4]:
+Keep a min heap of size 2
+[6,5] <- these are the 2 largest numbers
+The root (5) is our answer!
+
+Root (5) is kth largest!
+
+We maintain a min heap of size k
+For each number:
+
+Add it to heap
+If heap size > k, remove smallest
+
+After processing all numbers:
+
+Heap contains k largest numbers
+The root (smallest in heap) is kth largest!
+
+nums = [3,2,1,5,6,4], k = 2
+
+Process each number:
+3: heap = [3]
+2: heap = [2,3]
+1: heap = [2,3] (1 is smaller than min, ignore)
+5: heap = [3,5] (2 removed)
+6: heap = [5,6] (3 removed)
+4: heap = [5,6] (4 is smaller than min, ignore)
+
+*/
+
 const findKthLargest = function (nums, k) {
   const minHeap = new MinHeap();
   nums.forEach((num) => {
@@ -113,13 +145,10 @@ const findKthLargest = function (nums, k) {
 };
 
 /*
-Time Complexity:
 
-Constructing the MinHeap: The forEach loop iterates through each element in the nums array and performs insertion and extraction operations on the MinHeap. Insertion and extraction in a binary heap take O(log N) time, where N is the number of elements in the heap.
-The loop iterates through all elements in the nums array, so the overall time complexity of constructing the MinHeap is O(N log N).
+Time Complexity: O(n log k)
 
 Space Complexity:
-
-The MinHeap: The MinHeap stores a maximum of 'k' elements at any given time. Therefore, the space complexity of the MinHeap is O(k).
+The MinHeap stores a maximum of 'k' elements at any given time. Therefore, the space complexity of the MinHeap is O(k).
 
 */
