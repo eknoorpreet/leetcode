@@ -98,7 +98,8 @@ Keep track of the frequency of characters (tasks)
 Do the most frequent tasks first (use a max heap to determine that: O(log n),
 actually, O(log(26) since we can have atmost 26 different characters)
 
-Why? because when you do those first, you get more intervals in between, in which you can process the other ones.
+Why? because when you do those first, you get more intervals in between,
+in which you can process the other ones.
 Processing the most frequent tasks first gives you more time to not be idle!
 
 AAABBCC, n = 1
@@ -121,7 +122,7 @@ ABCABCA => Correct!
 const leastInterval = function (tasks, n) {
   // To figure out the most frequent task now in O(log 26) -> O(1)
   const maxHeap = new MaxHeap();
-  // Stores [numOftasksLeft, idleTime]
+  // Stores [freqofTaskLeft, timeAtWhichToAddBackToTheHeap] , i.e. [count - 1, time + n]
   // At what time, we can add the task back to the max heap (so we can process it again)
   // For ex: if we process 'A' of frequency 3 and time = 0,
   // its new frequency = 2 and now time = 1
@@ -145,12 +146,16 @@ const leastInterval = function (tasks, n) {
       // Processed character ('A') => decrement the count (= 2)
       let newFrequency = maxHeap.extractMax() - 1;
       if (newFrequency !== 0) {
-        // Queue will have [2, 1 + 1] => 'A' has 2 counts to be processed after 2 units of time. Basically, at what time is the current task going to be available to us again (can be added back to max heap)
+        // Queue will have [2, 1 + 1] => 'A' has 2 counts to be processed after 2 units of time.
+        //Basically, at what time is the current task going to be available to us again (can be added back to max heap)
         queue.push([newFrequency, time + n]);
       }
     }
     // Max heap empty => if there's still tasks to be processed, check if the first task on the queue has its turn (check its time)
     // If yes, add it back to the max heap (add the remaining count)
+    // At time = 3, A will be added back to the max heap
+    // But when A's turn comes in the next iteration, time = 4
+    // i.e., at time = 4, A's turn should have been completed
     if (queue.length && queue[0][1] === time) {
       maxHeap.insert(queue.shift()[0]);
     }
