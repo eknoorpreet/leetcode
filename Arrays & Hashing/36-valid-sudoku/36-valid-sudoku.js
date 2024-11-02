@@ -10,33 +10,44 @@ Only the filled cells need to be validated according to the mentioned rules. */
 
 //TC: O(9^2)
 //SC: O(9^2)
+/**
+ * @param {character[][]} board
+ * @return {boolean}
+ */
+
+//TC: O(9^2)
+//SC: O(9^2)
 const isValidSudoku = function (board) {
-  const rows = {};
-  const columns = {};
-  const squares = {};
+  const rows = {}; // Track numbers in each row
+  const columns = {}; // Track numbers in each column
+  const squares = {}; // Track numbers in each 3x3 sub-box
+
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
       const num = board[row][col];
       //'.' => empty values (only check filled values )
       if (num === '.') continue;
-      //we can go through the entire 9x9 board like via the nested loops
-      //but how how to traverse the 3x3 boxes (in order to check for
-      //repetition in those boxes)?
-      //(how to create a division)
-      //Ex: There's a number 5 at (1,1) and at (4,4). How can we determine
-      //that they are in different sub-boxes?
-      //[0-2]/3 = 0, [3-5]/3 = 1, [6-8]/3 = 2
+      // We can go through the entire 9x9 board via the nested loops
+      // But how to traverse the 3x3 boxes (in order to check for
+      // repetition in those boxes)?
+      // (How to create a division)
+      // Ex: There's a number 5 at (1,1) and at (4,4). How can we determine
+      // that they are in different sub-boxes?
+      // [0-2]/3 = 0, [3-5]/3 = 1, [6-8]/3 = 2
+      // This creates a unique key for each 3x3 sub-box:
+      // For positions (0-2, 0-2): "00"
+      // For positions (0-2, 3-5): "01"
       const grid = `${Math.floor(row / 3)}${Math.floor(col / 3)}`;
       console.log('grid', grid);
-      //a hash set for every row
+      // A hash set for every row
       if (!rows[row]) rows[row] = new Set();
-      //a hash set for every col
+      // A hash set for every col
       if (!columns[col]) columns[col] = new Set();
-      //a hash set for every 3x3 grid
-      //squares: {'00': set()}
+      // A hash set for every 3x3 grid
+      // Squares: {'00': set()}
       if (!squares[grid]) squares[grid] = new Set();
 
-      //is there a repetition in row/col/3x3 sub-box
+      // Is there a repetition in row/col/3x3 sub-box
       if (
         rows[row].has(num) ||
         columns[col].has(num) ||
@@ -45,11 +56,11 @@ const isValidSudoku = function (board) {
         return false;
       }
 
-      //add curr num to row
+      // Add curr num to row
       rows[row].add(num);
-      //add curr num to col
+      // Add curr num to col
       columns[col].add(num);
-      //add curr num to 3x3 sub-box
+      // Add curr num to 3x3 sub-box
       squares[grid].add(num);
     }
   }
