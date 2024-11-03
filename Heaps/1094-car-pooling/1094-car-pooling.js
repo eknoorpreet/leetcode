@@ -130,11 +130,27 @@ class MyPriorityQueue {
 
 /*
 
-  EndingPosition as key since the lowest number will represent the next drop-off
+We have a car that:
 
-  [end, numPass]
+Can only drive east (one direction)
+Has a fixed passenger capacity
+Needs to handle multiple trips where each trip specifies:
+  Number of passengers
+  Pickup location (in km from start)
+  Drop-off location (in km from start)
 
-  */
+Solution Intuition:
+The key insights are:
+
+Sort trips by start location (since car only goes east)
+Use a priority queue to track drop-offs [numPass, dropOffLocation]
+  (The passengers we should drop off are those whose drop-off location is earliest, i.e. (smallest number))
+  This lets us efficiently track who needs to be dropped off next and
+  free up capacity before picking up new passengers
+Track current passengers as we move along
+Drop off passengers before picking up new ones at each location
+
+*/
 
 const carPooling = function (trips, capacity) {
   // Sort based on the starting position
