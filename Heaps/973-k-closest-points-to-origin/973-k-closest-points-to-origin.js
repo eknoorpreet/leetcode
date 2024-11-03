@@ -138,19 +138,39 @@ class MyPriorityQueue {
   So, we need to remove anything exceeding the k limit and the
   entire priority queue will be the answer (will need some modification...)!
 
-  Since the above priorty queue is based on min heap, we can simulate a max heap by
+  Since the above priority queue is based on min heap, we can simulate a max heap by
   storing the distance value as a negative.
+
+  Key Insights:
+
+  Distance calculation shortcut:
+
+  Instead of √(x² + y²), we can just use x² + y²
+  This works because:
+
+  If d₁ < d₂, then d₁² < d₂²
+  Avoiding square root saves computation
+
+  Max Heap approach:
+
+  Keep a max heap of size k
+  Store points with their negative distances as priority
+  Why negative? Because:
+
+  We want to remove points with larger distances when heap exceeds k
+  By making distances negative, larger distances become smaller numbers
+  Max heap removes largest element first
 
   */
 
 const kClosest = function (points, k) {
   const pq = new MyPriorityQueue();
   for (const point of points) {
-    let distanceToOrigin = -(point[0] * point[0] + point[1] * point[1]);
+    const distanceToOrigin = -(point[0] * point[0] + point[1] * point[1]);
     pq.enqueue(point, distanceToOrigin);
     if (pq.values.length > k) pq.dequeue();
   }
-  let result = pq.values.map((el) => el.val);
+  const result = pq.values.map((el) => el.val);
   return result;
 };
 
