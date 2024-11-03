@@ -141,15 +141,11 @@ class MyPriorityQueue {
 const longestDiverseString0 = function (a, b, c) {
   let result = '';
   const pq = new MyPriorityQueue();
-  // Use a map to store the frequencies of a, b, c
-  const frequencyMap = new Map();
-  frequencyMap.set('a', a);
-  frequencyMap.set('b', b);
-  frequencyMap.set('c', c);
-  for (let [char, freq] of frequencyMap) {
-    // No need to add a 0 count character to the heap
-    if (freq !== 0) pq.enqueue(char, -freq);
-  }
+  // Directly store the letter and frequencies
+  if (a !== 0) pq.enqueue('a', -a);
+  if (b !== 0) pq.enqueue('b', -b);
+  if (c !== 0) pq.enqueue('c', -c);
+
   while (pq.values.length) {
     let { val: char, priority: freq } = pq.dequeue();
     // Are we headed towards a 3-count ("ccc")
@@ -180,37 +176,6 @@ const longestDiverseString0 = function (a, b, c) {
     // Do it here, not in the above 'else'. Why? Because, even if
     // 'char' was not used in the 'result' this time, it might be used again later.
     // So, we need to add it back to the queue!
-    if (freq !== 0) pq.enqueue(char, freq);
-  }
-  return result;
-};
-
-const longestDiverseString = function (a, b, c) {
-  const pq = new MyPriorityQueue();
-  const frequency = new Map();
-  let result = '';
-  frequency.set('a', -a);
-  frequency.set('b', -b);
-  frequency.set('c', -c);
-  for (let [char, freq] of frequency) {
-    if (freq !== 0) pq.enqueue(char, freq);
-  }
-  while (pq.values.length) {
-    let { val: char, priority: freq } = pq.dequeue();
-    if (
-      result.length > 1 &&
-      char === result.at(-1) &&
-      result.at(-1) === result.at(-2)
-    ) {
-      if (!pq.values.length) break;
-      let { val: char2, priority: freq2 } = pq.dequeue();
-      result += char2;
-      freq2++;
-      if (freq2 !== 0) pq.enqueue(char2, freq2);
-    } else {
-      result += char;
-      freq++;
-    }
     if (freq !== 0) pq.enqueue(char, freq);
   }
   return result;
