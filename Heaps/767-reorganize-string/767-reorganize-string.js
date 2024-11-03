@@ -151,7 +151,7 @@ const reorganizeString = function (s) {
       freq2++;
       if (freq2 !== 0) pq.enqueue(char2, freq2);
     } else {
-      // Else, we're not headed towards a 3-count ("ccc")
+      // Else, we're not headed towards a 2-count ("cc")
       // Build the string with the original / first most frequent character
       result += char;
       // Decrement the frequency but since it's stored as a negative, increment it!
