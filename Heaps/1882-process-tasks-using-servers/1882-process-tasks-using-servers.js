@@ -149,6 +149,37 @@ class MyPriorityQueue {
   }
 }
 
+/*
+
+Key Intuition:
+
+We need to track two sets of servers:
+
+Available servers (ready to take tasks)
+Unavailable servers (currently processing tasks)
+
+For each set, we need to efficiently find:
+
+Available servers: The server with lowest weight (and lowest index if tied)
+Unavailable servers: The server that will become available next
+
+1. Data Structures:
+
+  Two priority queues (implemented as min-heaps):
+
+  availableServers: Orders servers by weight (and index for ties)
+  unavailableServers: Orders servers by when they'll become available
+
+2. Time Management:
+
+  time tracks the current moment
+  Time advances in two ways:
+
+  Natural progression with task arrivals (time = Math.max(time, i))
+  Jumping forward when no servers are available
+
+*/
+
 const assignTasks = function (servers, tasks) {
   const result = Array(tasks.length).fill(0);
   // weight will be the key
@@ -159,7 +190,7 @@ const assignTasks = function (servers, tasks) {
 
   // In the beginning, all servers are available
   // Add all of them to the availableServers heap
-  for (let i = 0; i < Servers.values.length; i++) {
+  for (let i = 0; i < servers.length; i++) {
     availableServers.enqueue(i, servers[i]); // O(logn)
   }
 
