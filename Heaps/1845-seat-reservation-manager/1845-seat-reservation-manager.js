@@ -173,3 +173,28 @@ SeatManager.prototype.unreserve = function (seatNumber) {
  * var param_1 = obj.reserve()
  * obj.unreserve(seatNumber)
  */
+
+/*
+
+Time Complexity:
+
+  Constructor SeatManager(n):
+
+  Inserting n elements into a min heap: O(n log n)
+  Each individual insert takes O(log n)
+  We do this n times
+
+  reserve():
+
+  Extracting minimum from min heap: O(log n)
+  This involves removing root and reheapifying
+
+  unreserve(seatNumber):
+
+  Inserting into min heap: O(log n)
+
+Space Complexity:
+
+The min heap stores at most n elements: O(n)
+
+*/
