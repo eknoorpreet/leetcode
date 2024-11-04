@@ -208,7 +208,6 @@ const assignTasks = function (servers, tasks) {
       time = unavailableServers.peek().priority;
     }
 
-    // We have advanced the time.
     // Make all unavailable servers (that were to become available at current 'time') available
     while (
       // O(logn).
@@ -221,13 +220,11 @@ const assignTasks = function (servers, tasks) {
       availableServers.enqueue(server.index, server.weight);
     }
 
-    // Assign the next task to the next available server
-
+    // Assign the task to the available server
     let { val: index, priority: weight } = availableServers.dequeue(); // O(logn)
     result[i] = index;
     unavailableServers.enqueue({ index, weight }, time + tasks[i]); // O(logn)
   }
-
   return result;
 };
 
