@@ -147,105 +147,6 @@ class MyPriorityQueue {
   }
 }
 
-class Node {
-  constructor(val, priority) {
-    this.val = val;
-    this.priority = priority;
-  }
-}
-
-class MyPriorityQueue {
-  constructor() {
-    this.values = [];
-  }
-
-  enqueue(val, priority) {
-    const newNode = new Node(val, priority);
-    this.values.push(newNode);
-    this.bubbleUp();
-  }
-
-  bubbleUp() {
-    let idx = this.values.length - 1;
-    const element = this.values[idx];
-
-    while (idx > 0) {
-      let parentIdx = Math.floor((idx - 1) / 2);
-      let parent = this.values[parentIdx];
-      // lower priority number = higher priority
-      if (
-        element.priority < parent.priority ||
-        (element.priority === parent.priority && element.val < parent.val)
-      ) {
-        this.values[parentIdx] = element;
-        this.values[idx] = parent;
-        idx = parentIdx;
-      } else {
-        break;
-      }
-    }
-  }
-
-  dequeue() {
-    const min = this.values[0];
-    const end = this.values.pop();
-    if (this.values.length > 0) {
-      this.values[0] = end;
-      this.sinkDown();
-    }
-    return min;
-  }
-
-  sinkDown() {
-    let idx = 0;
-    const length = this.values.length;
-    const element = this.values[0];
-
-    while (true) {
-      let leftChildIdx = 2 * idx + 1;
-      let rightChildIdx = 2 * idx + 2;
-      let leftChild, rightChild;
-      let swap = null;
-
-      if (leftChildIdx < length) {
-        leftChild = this.values[leftChildIdx];
-        if (
-          leftChild.priority < element.priority ||
-          (leftChild.priority === element.priority &&
-            leftChild.val < element.val)
-        ) {
-          swap = leftChildIdx;
-        }
-      }
-
-      if (rightChildIdx < length) {
-        rightChild = this.values[rightChildIdx];
-        if (
-          (swap === null &&
-            (rightChild.priority < element.priority ||
-              (rightChild.priority === element.priority &&
-                rightChild.val < element.val))) ||
-          (swap !== null &&
-            (rightChild.priority < leftChild.priority ||
-              (rightChild.priority === leftChild.priority &&
-                rightChild.val < leftChild.val)))
-        ) {
-          swap = rightChildIdx;
-        }
-      }
-
-      if (swap === null) break;
-      this.values[idx] = this.values[swap];
-      this.values[swap] = element;
-      idx = swap;
-    }
-  }
-
-  peek() {
-    return this.values[0];
-  }
-}
-
 /*
 
   We can't just throw all of the tasks into the heap right away
@@ -267,8 +168,8 @@ const getOrder = function (tasks) {
   // processingTime will be the key
   // (many available => choose one with the smallest processingTime, if tie, go for index)
   const availableTasks = new MyPriorityQueue();
-  // We need to return the original index in the outout array
-  // Remember the original index by adding it to the inout array
+  // We need to return the original index in the output array
+  // Remember the original index by adding it to the input array
   for (let i = 0; i < tasks.length; i++) {
     tasks[i].push(i);
   }
