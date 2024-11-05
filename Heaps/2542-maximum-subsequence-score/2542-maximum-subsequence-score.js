@@ -133,17 +133,49 @@ class MinHeap {
 
 /*
 
-  We don't really care about the subsequence; we just have to focus on the output
+We don't really care about the subsequence; we just have to focus on the output
 
-  How to maximize the output?
-  1. Maximize the sum
-  1. Maximize the product (maximinze the individuals / minimums)
+Key Insights:
 
-  If we want the set of values to be of size k and always want the smallest to be of
+The score formula has two parts:
 
-  */
+Sum of selected elements from nums1
+Minimum of selected elements from nums2
 
-const maxScore0 = function (nums1, nums2, k) {
+To maximize the score (which is a product), we need to:
+
+Maximize the sum from nums1
+Keep the minimum from nums2 as high as possible
+
+Solution Strategy:
+
+1. Sort pairs by nums2 in descending order
+  This ensures we consider elements with higher nums2 values first
+  Example after sorting [nums1[i], nums2[i]]:
+
+  Input: nums1 = [1,3,3,2], nums2 = [2,1,3,4]
+  Sorted by nums2:
+  [ [2,4], [3,3], [1,2], [3,1] ]
+
+2. Use a min-heap to maintain k largest elements from nums1
+  Why min-heap? Because when we exceed k elements, we want to remove the smallest one
+  This helps maximize the sum from nums1
+
+3. For each iteration:
+  Add nums1 value to heap and sum
+  If heap size > k, remove smallest (maintains k largest)
+  When heap size = k, calculate score using current nums2 value, which is guaranteed to be
+  the minimum among selected nums2 values (When we reach k, current nums2 value = 2;
+  all previous values (4,3) are larger and all remaining values (1) are smaller (due to sorting))
+
+Why This Works:
+By sorting by nums2 in descending order, we ensure that at any point, the current nums2 value is the minimum of all selected nums2 values so far
+The min-heap helps us maintain the k largest values from nums1, maximizing their sum
+We're effectively trying all possible combinations while maintaining optimal values
+
+*/
+
+const maxScore = function (nums1, nums2, k) {
   let sum = 0; // store the sum of the selected elements from nums1.
   let maximumScore = 0; // result
 
@@ -165,10 +197,10 @@ const maxScore0 = function (nums1, nums2, k) {
   // By iterating over the sorted pairs and using a min-heap to maintain the top k
   // elements from nums1, we ensure that we are always considering the largest possible sum for nums1 elements while keeping the minimum value of the corresponding nums2 elements high.
 
-  for (let [a, b] of sortedPairs) {
+  for (let [num1, num2] of sortedPairs) {
     // O(nlogk) (O(logk) for all n)
-    minHeap.insert(a); // Add the current element from nums1 to the heap.
-    sum += a; // Add the current element to the total sum.
+    minHeap.insert(num1); // Add the current element from nums1 to the heap.
+    sum += num1; // Add the current element to the total sum.
 
     // If the heap size exceeds k, remove the smallest element.
     if (minHeap.values.length > k) {
@@ -179,8 +211,8 @@ const maxScore0 = function (nums1, nums2, k) {
     // If the heap size is exactly k, calculate the possible score.
     if (minHeap.values.length === k) {
       // Update the result with the maximum score.
-      // At any point, the curr b (in nums2) will be the minimum in nums2
-      res = Math.max(maximumScore, sum * b);
+      // At any point, the curr num2 (in nums2) will be the minimum in nums2
+      res = Math.max(maximumScore, sum * num2);
     }
   }
   return maximumScore;
@@ -191,7 +223,6 @@ const maxScore0 = function (nums1, nums2, k) {
 Time complexity is: O(nlogn+nlogk)
 Since logn is generally larger than
 logk when n ≥ k, the dominant term is O(nlogn). Thus, the time complexity simplifies to: O(nlogn)
-
 
 Space complexity is:
 
