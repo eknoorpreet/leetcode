@@ -206,4 +206,42 @@ const getOrder = function (tasks) {
 Time Complexity: O(nlogn)
 Space Complexity: O(n)
 
+Key Differences with 1882. Process Tasks Using Servers (https://leetcode.com/problems/process-tasks-using-servers/):
+
+1. Queue vs Available Tasks Timing:
+
+(Servers): Tasks arrive strictly in order at each second (0,1,2...). The timing is fixed and sequential.
+(CPU): Tasks have their own enqueue times that can vary (like [7,10], [7,12]...). Multiple tasks can become available at the same time.
+
+
+2. Priority Queue Usage:
+
+Servers Problem: Uses two priority queues:
+availableServers: for free servers (prioritized by weight)
+unavailableServers: for busy servers (prioritized by time they'll be free)
+
+Tasks Problem: Uses only one priority queue:
+availableTasks: for tasks ready to be processed (prioritized by processing time)
+
+
+3. Time Advancement Logic:
+
+Servers Problem: Time advances either by task index or by when next server becomes available
+Tasks Problem: Time advances either to next task's enqueue time or by processing time of current task
+
+In the servers problem, we need two queues because:
+  Servers are reusable resources that switch between available/unavailable
+  We need to track when each server becomes available again
+  Multiple servers can be processing tasks simultaneously
+
+In the CPU problem:
+  We have a single CPU (single-threaded)
+  Once a task is processed, it's done (not reusable)
+  We only need to track which tasks are available to process
+  Only one task can be processed at a time
+
+The servers problem is essentially a resource allocation problem (multiple servers handling
+multiple tasks), while the tasks problem is a task scheduling problem (single CPU handling tasks
+one at a time).
+
 */
