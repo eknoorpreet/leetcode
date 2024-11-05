@@ -130,19 +130,22 @@ class MinHeap {
   }
 }
 
+// Same as https://leetcode.com/problems/maximum-subsequence-score/
 const maxPerformance = function (n, speed, efficiency, k) {
   let sum = 0;
   let maximumPerf = BigInt(0);
   const MOD = BigInt(10 ** 9 + 7);
+
   const minHeap = new MinHeap();
+
   const sortedPairs = Array(n)
     .fill(0)
     .map((_, i) => [speed[i], efficiency[i]])
     .sort((a, b) => b[1] - a[1]);
 
-  for (let [a, b] of sortedPairs) {
-    minHeap.insert(a);
-    sum += a;
+  for (let [currSpeed, currEfficiency] of sortedPairs) {
+    minHeap.insert(currSpeed);
+    sum += currSpeed;
 
     // "at most k different engineers", <= is fine!
     // If the heap size exceeds k, remove the smallest element.
@@ -151,11 +154,11 @@ const maxPerformance = function (n, speed, efficiency, k) {
       sum -= minHeap.extractMin();
     }
 
-    if (sum * b > maximumPerf) {
-      maximumPerf = BigInt(sum) * BigInt(b);
+    if (sum * currEfficiency > maximumPerf) {
+      maximumPerf = BigInt(sum) * BigInt(currEfficiency);
     }
   }
-  return maximumPerf % MOD;
+  return Number(maximumPerf % MOD);
 };
 
 /*
