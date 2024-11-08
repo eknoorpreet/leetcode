@@ -51,13 +51,25 @@ Brute-force: Check every subarray (n subarrays starting from n elements) and che
 Optimized: 23 % 6 = 5, basically, we need a 1. If we add more, the next time, if we happen to
 get a remainder of 5, it'd only be because we added a multiple of k!
 
-A hashmap to store remainder (key) and index (so we can check length) of end of subarray (value)
+A hashmap to store remainder (key) and index (so we can check length) of start of subarray (value)
 remainder at 0th index and 2nd index = 5
 => only possible because we added values that are multiple of k
-make sure that subarray is of length 2 (difference of indices >= 2)*/
+make sure that subarray is of length 2 (difference of indices >= 2)
+
+Therefore, key intuition:
+
+1. If two running sums have the same remainder when divided by k,
+then the subarray between those points must sum to a multiple of k.
+2. We just need to track remainders and their indices,
+looking for matching remainders at least 2 positions apart.
+
+*/
 
 const checkSubarraySum = function (nums, k) {
-  /*consider the start of the subarray (before index 0)
+  /*
+
+  The initial remainder[0] = -1 handles cases where the subarray starts from index 0:
+  Consider the start of the subarray (before index 0)
   [2, 4, 3], k = 6
   2 + 4 = 6 % 6 = 0. If map = {0: 0}, i(1) - rem[0] = 1 - 0 = 1 => false => wrong!
   Hence, 2 + 4 = 6 % 6 = 0. map = {0: -1}, i(1) - rem[0] = 1 - (-1) = 2 => true => correct!
