@@ -29,6 +29,24 @@ n == nums.length
  * @return {boolean}
  */
 
+/*
+
+Key Intuition:
+
+When we find a violation (nums[i] > nums[i+1]), we have two choices:
+
+Decrease nums[i] to match nums[i+1]
+Increase nums[i+1] to match nums[i]
+
+
+We should prioritize decreasing nums[i] because it's safer for maintaining non-decreasing order.
+Consider [3, 4, 2]
+We want to prioritize changing 4 to 2. Why? Because that's how we increase our chances of getting a non-decreasing array. If we change 2 to 4, we don't know what lies ahead; we made an element greater but future elements could be smaller => decreasing our chances. Therefore, we try to decrease the left element and increase the right one only if the former strategy doesn't work
+
+Since arr is [5, 7, 1, 8], changing 7 to 1 will make [1, 1] non-decreasing but not [5, 1, 1].
+The problem? 5 > 1. But we know that the correct solution would be [5, 7, 7, 8], i.e., incrementing the next element. Therefore, when the next element () < the previous element, increase nums[i + 1] to match nums[i]. Decrease nums[i] to match nums[i+1] only if nums[i+1] >= nums[i-1]
+*/
+
 const checkPossibility = function (nums) {
   let changed = false;
   for (let i = 0; i < nums.length - 1; i++) {
