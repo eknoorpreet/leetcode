@@ -94,12 +94,59 @@ The number of opening brackets '[' equals n / 2, and the number of closing brack
 
 /*
 
-The intuition behind this approach is to count the extra opening brackets in the string,
+The key intuition is that we don't need to actually perform the swaps -
+we just need to count how many are needed. We count the extra opening brackets in the string,
 which represent the brackets that need corresponding closing brackets to make the string balanced.
-The number of swaps required is half the count of these unbalanced pairs, and the algorithm
-takes into account cases where an extra swap is needed.
+
+We track two things:
+
+extraOpen: Count of unmatched '[' brackets
+swaps: Count of right brackets ']' that appear before their matching '['
+
+The final formula Math.floor((swaps + 1) / 2) works because:
+
+Each swap can fix two positions
+For example, in "]]][[["
+One swap can fix "[]][]["
+Another swap can fix "[[][]]"
+So if we have n misplaced brackets, we need ⌊(n+1)/2⌋ swaps
+
+Let me explain why we need ⌊(n+1)/2⌋ swaps when we have n misplaced brackets, using examples:
+
+    For n = 3 misplaced brackets (like in "]]][[["):
+
+    Original: ]]][[[ (3 misplaced brackets)
+    ⌊(3+1)/2⌋ = ⌊4/2⌋ = 2 swaps needed
+
+    Let's see why:
+    Swap 1: ]]] [[[ → []] ][[  (fixes two positions)
+    Swap 2: []] ][[ → [][] ][  (fixes remaining position)
+    Final:  [][][] (balanced)
+
+    For n = 2 misplaced brackets (like in "][]["):
+    Original: ][][ (2 misplaced brackets)
+    ⌊(2+1)/2⌋ = ⌊3/2⌋ = 1 swap needed
+
+    Let's see why:
+    Swap 1: ][][ → [[][ (fixes two positions)
+    Final:  [[]] (balanced)
+
+The formula works because:
+
+    Each swap operation can fix TWO positions at once
+
+    When you swap a '[' with a ']', you're correctly positioning both brackets
+    Like in "][][" → "[[]]", one swap fixes both the first and last position
+
+    However, when you have an odd number of misplaced brackets:
+
+    Example: 3 misplaced brackets
+    First swap fixes 2 positions
+    Second swap is needed for the remaining 1 position
+    That's why we add 1 before dividing by 2
 
 */
+
 const minSwaps = function (s) {
   //First cancel out all the valid pairs, then you will be left with something like ]]][[[, and the answer will be (m + 1/2). Where m is the number of pairs left.
   let extraOpen = 0;
@@ -117,17 +164,12 @@ const minSwaps = function (s) {
       extraOpen--;
     }
   }
-  //This calculation ensures that if there is an odd number of swaps needed, you increment it by
-  //1 and then divide by 2. This covers the case where two swaps are required to balance
-  //adjacent brackets, and one swap operation is not possible.
   return Math.floor((swaps + 1) / 2);
 };
 
 /*
 
-The time complexity of this solution is O(n), where n is the length of the input string s,
-as it iterates through the string once.
-
-The space complexity is O(1).
+Time Complexity: O(n) - single pass through string
+Space Complexity: O(1)
 
 */
