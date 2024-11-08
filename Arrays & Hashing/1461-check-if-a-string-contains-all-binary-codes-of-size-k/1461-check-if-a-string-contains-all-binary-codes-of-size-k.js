@@ -67,8 +67,13 @@ const hasAllCodes0 = function (s, k) {
   return true;
 };
 
-//Get every single substring of size k and check how many unique substrings of size k are there.
-//What if we find only 1? We want exact k.
+/*
+
+Get every single substring of size k and check how many unique substrings of size k are there. What if we find only 1? We want exact 2^k.
+
+The intuition behind this solution is that if all possible binary codes of length k are present in the string s, then the size of the Set containing these codes should be equal to 2^k, as there are 2^k possible binary codes of length k.
+
+*/
 const hasAllCodes = function (s, k) {
   const set = new Set();
   for (let i = 0; i < s.length - k + 1; i++) {
@@ -79,9 +84,12 @@ const hasAllCodes = function (s, k) {
 };
 
 /*
+
 Time complexity:
 The overall time complexity is O((n - k + 1) * k) => O(n * k),
-where k is the length of binary codes, and n is the length of the input string.
+where n is the length of the string s and k is the length of the binary codes.
+This is because we need to iterate through the entire string s and extract a
+substring of length k for each iteration.
 
 Space Complexity:
 The code uses a set set to store unique binary codes found in the string s.
