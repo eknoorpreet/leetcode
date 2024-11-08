@@ -51,14 +51,33 @@ const RandomizedSet = function () {
 
 insertion and removal in O(1) is easier using set as compared to lists. Can also tell if the value already exists.
 
-{1, 2, 3}, indices: 0, 1, 2: generate a random value within this range. But sets don't have indices! We can convert set to list for the getRandom function that will take O(n) time.
+{1, 2, 3}, indices: 0, 1, 2: generate a random value within this range. But sets don't have indices!
+We can convert set to list for the getRandom function that will take O(n) time.
 Solution: Maintain a list/array alongside.
 
-While removing from set, also remove from list. {1, 2, 3} => {1, 2}, list: [1, 2, 3] => [1, 2] and generate a random value from [1, 2], but what if we remove from middle? => O(n) (searching the value since we don't know the index)
+While removing from set, also remove from list. {1, 2, 3} => {1, 2}, list: [1, 2, 3] => [1, 2]
+and generate a random value from [1, 2], but what if we remove from middle? => O(n) (searching
+the value since we don't know the index)
 Solution: use a map with value mapped to index {1: 0, 2: 1, 3: 2}.
 
-How about we replace the value to be removed with something else? Now, it has a disproportionate chance.
+How about we replace the value to be removed with something else?
+Now, the new value has a disproportionate chance.
 Solution: We can replace it with the last value of list and pop from the end => O(1)
+
+The key insights are:
+
+Using a Map for Constant-Time Insertion and Removal:
+
+The Map is used to store the values and their corresponding indices in the list.
+This allows for constant-time insertion and removal, as we can directly access the
+index of a value in the list.
+
+
+Using a List for Constant-Time Random Selection:
+
+The list is used to store the actual values in the set.
+This allows for constant-time random selection, as we can simply generate a random index and
+retrieve the value at that index.
 
 */
 
@@ -98,6 +117,7 @@ RandomizedSet.prototype.remove = function (val) {
  * @return {number}
  */
 RandomizedSet.prototype.getRandom = function () {
+  // generate a random index between 0 and the length of the list using Math.random(
   return this.list[Math.floor(Math.random() * this.list.length)];
 };
 
