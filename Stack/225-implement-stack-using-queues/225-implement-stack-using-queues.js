@@ -99,11 +99,6 @@ MyStack.prototype.push = function (x) {
  * @return {number}
  */
 MyStack.prototype.pop = function () {
-  // stack pops the latest pushed element
-  // To simulate stack's pop via a queue, make it so that the element to pop
-  // comes out at the front. So, take the front element and move it to the end until the last
-  // element is at the front! Then, remove it!
-
   // queue = [1, 2, 3, 4, 5]
   // i = 0, queue = [2, 3, 4, 5, 1]
   // i = 1, queue = [3, 4, 5, 1, 2]
@@ -116,6 +111,21 @@ MyStack.prototype.pop = function () {
   for (let i = 0; i < this.queue.length - 1; i++) {
     this.queue.enqueue(this.queue.dequeue());
   }
+  return this.queue.dequeue();
+};
+
+MyStack.prototype.pop = function () {
+  // We can only remove from the front of the queue
+  // To simulate stack's pop via a queue, we need to bring the element to pop to the front
+  // So, take the front element and move it to the end until the last
+  // element is at the front! Then, remove it!
+
+  // Start removing from the beginning and add to the end in the same order (except last element)
+  for (let i = 0; i < this.queue.length - 1; i++) {
+    this.queue.enqueue(this.queue.dequeue());
+  }
+  // Loop ended. Now, we have 5 at the front
+  // Remove 5
   return this.queue.dequeue();
 };
 
