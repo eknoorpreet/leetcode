@@ -120,8 +120,16 @@ threeSum([-1, 0, 1, 2, -1, -4]); //[[-1,-1,2],[-1,0,1]]
 threeSum([-1, 0, 1, 2, -1, -4]); //[[-1,-1,2],[-1,0,1]]
 
 /*
-Time complexity:
-Sorting: O(nlogn). The entire function will take O(n * logn + n^2) =>  asymptotically equivalent to O(n^2)
+Time Complexity: O(n²)
+
+The initial sort is O(n log n)
+The main nested loop structure:
+
+Outer loop runs O(n) times
+Inner while loop (between left and right pointers) can traverse at most O(n) elements
+So the nested structure is O(n * n) = O(n²)
+
+Overall time complexity is O(n log n) + O(n²) = O(n²), as the quadratic term dominates
 
 Space complexity: Apart from the space required for the output array, the space complexity of the above algorithm will be O(n)
 which is required for sorting. */
