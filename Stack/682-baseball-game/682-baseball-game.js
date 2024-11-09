@@ -73,25 +73,24 @@ For operations "C" and "D", there will always be at least one previous score on 
 //Same as: https://leetcode.com/problems/evaluate-reverse-polish-notation/
 const calPoints = function (operations) {
   const stack = [];
-  let result = 0;
-  for (let op of operations) {
-    if (op === '+') {
-      const a = stack.at(-1); //last op
-      const b = stack.at(-2); //2nd last op
-      stack.push(a + b);
-    } else if (op === 'D') {
-      const a = stack.at(-1); //last op
-      stack.push(a * 2);
-    } else if (op === 'C') {
-      stack.pop(); //invalidate last score
+  for (const operation of operations) {
+    if (operation === '+') {
+      const newScore = stack.at(-1) + stack.at(-2);
+      stack.push(newScore);
+    } else if (operation === 'D') {
+      const newScore = stack.at(-1) * 2;
+      stack.push(newScore);
+    } else if (operation === 'C') {
+      stack.pop();
     } else {
-      stack.push(Number(op)); //push current score
+      stack.push(Number(operation));
     }
   }
-  while (stack.length) {
-    result += stack.pop();
+  let sum = 0;
+  for (const score of stack) {
+    sum += score;
   }
-  return result;
+  return sum;
 };
 
 //TC: O(n)
