@@ -59,6 +59,13 @@ const validateStackSequences0 = function (pushed, popped) {
 
 Optimization: Use the pushed array as a stack to simulate the stack operations.
 
+Same Intuition:
+
+We can simulate the actual stack operations to verify if the sequence is valid
+NEW: We'll use the pushed array itself as our stack to save space
+As we push elements, we'll check if we can perform any pop operations that match our target sequence
+
+
 */
 
 const validateStackSequences = (pushed, popped) => {
@@ -67,17 +74,25 @@ const validateStackSequences = (pushed, popped) => {
 
   for (const val of pushed) {
     pushed[i++] = val; // Using pushed as the stack.
+    // While we can match pops, simulate them
+    // Pop as many elements as possible whenever they match the required sequence
+
     // Since we just incremented i above, we'll check the prev element (i - 1)
     // Was the [i - 1] in pushed the same as j in popped
     while (i > 0 && pushed[i - 1] === popped[j]) {
       // pushed[i - 1] values equal to popped[j];
-      i--; // Decrement i
-      j++; // Increment j
+      i--; // Simulate pop by moving stack pointer back
+      j++; // Move to next value we need to pop
     }
   }
-
-  return i === 0; // Since pushed is a permutation of popped, so at the end, we are supposed to be left with an empty stack
+  // We know the sequence is invalid if we can't empty the stack by the end
+  // Since pushed is a permutation of popped,
+  // So at the end, we are supposed to be left with an empty stack
+  return i === 0;
 };
+/*
 
-//TC: O(n)
-//SC: O(1)
+Time Complexity: O(n) where n is the length of the arrays
+Space Complexity: O(1) since we're reusing the input array as our stack
+
+*/
