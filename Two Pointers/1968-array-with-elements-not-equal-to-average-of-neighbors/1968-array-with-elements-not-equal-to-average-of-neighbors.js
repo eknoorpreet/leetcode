@@ -39,6 +39,49 @@ const rearrangeArray0 = function (nums) {
   return result;
 };
 
+// TC: O(nlogn)
+// SC: O(1)
+
+/*
+
+Key Insights:
+
+For an element to be the average of its neighbors means: 2 * nums[i] = nums[i-1] + nums[i+1]
+Since numbers are distinct, swapping two adjacent elements can break the average condition
+Two passes (forward and backward) are sufficient to fix all cases
+
+Why This Pattern Works:
+
+Forward Pass Rule:
+
+Always swap with right neighbor
+This pushes "problems" forward
+Each fix is guaranteed for current position
+Might create new problems, but only in positions we haven't checked yet
+
+Backward Pass Rule:
+
+Always swap with left neighbor
+Cleans up any remaining problems
+Each fix is guaranteed for current position
+Only affects positions we'll check in this backward pass
+
+Proof it Works:
+
+After forward pass:
+
+No element is average of its neighbors unless we created a new problem by swapping
+Any new problems were pushed to the right
+
+
+After backward pass:
+
+Any problems created by forward pass are fixed
+No new problems can be created in positions we've already checked
+The process completes with all positions fixed
+
+*/
+
 const rearrangeArray = (nums) => {
   let n = nums.length;
 
