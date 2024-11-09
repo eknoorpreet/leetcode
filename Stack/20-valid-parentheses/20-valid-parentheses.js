@@ -75,7 +75,7 @@ Intuition: Using a stack to track open parens and process them (pop off when fou
 
 */
 
-const isValid = function (s) {
+const isValid0 = function (s) {
   const map = new Map();
   //order matters =>
   //a closing parens needs to be matched to the latest opened parens
@@ -105,6 +105,41 @@ const isValid = function (s) {
   //all parens matched (stack empty) => valid
   if (!stack.length) return true;
   else return false;
+};
+
+// Same logic but more elegant code
+const isValid = function (s) {
+  const map = new Map();
+  map.set('(', ')');
+  map.set('{', '}');
+  map.set('[', ']');
+
+  const stack = new Stack();
+  for (let i = 0; i < s.length; i++) {
+    const currBracket = s[i];
+    // If it's an opening bracket
+    if (map.has(currBracket)) {
+      // Push it on top of the stack (most-recently opened parens)
+      stack.push(currBracket);
+    } else if (stack.length === 0) {
+      // Else, it's a closing bracket
+      // If stack is empty => no opening bracket for the current closing bracket => invalid!
+      return false;
+    } else {
+      // Stack is non-empty, get the last opened bracket
+      const lastOpeningBracket = stack.pop();
+      // Access its closing bracket
+      const correspondingClosingBracket = map.get(lastOpeningBracket);
+      // See if the current closing bracket matches. If not, false!
+      // Otherwise, continue
+      if (currBracket !== correspondingClosingBracket) {
+        return false;
+      }
+    }
+  }
+  // Loop ends, stack still not empty? => brackets not closed/balanced => false
+  if (stack.length !== 0) return false;
+  return true;
 };
 
 //TC: O(n)
