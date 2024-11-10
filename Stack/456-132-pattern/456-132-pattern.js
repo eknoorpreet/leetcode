@@ -31,29 +31,37 @@ n == nums.length
 
 */
 
-function find132pattern(nums) {
-  let minimums = new Array(nums.length).fill(0);
-  let min = nums[0];
-  let stack = []; //will also contain the min value for entire array for k
-  //stack = [n, min]
-  //nums = [3, 1, 4, 2]
-  //n   3 1 4
-  //min 3 3 1
+/*
 
-  // for k, we want to find a value greater but in a previosu index => find k's previous greater!
+Key Intuition:
+
+For a 132 pattern, we need three numbers where:
+
+nums[i] (first number) < nums[k] (third number) < nums[j] (second number)
+
+We can keep track of minimum values seen so far (potential nums[i])
+Use a stack to track potential middle values (nums[j]) along with their corresponding minimum values
+
+*/
+
+function find132pattern(nums) {
+  let min = nums[0]; // Keep track of minimum value seen so far
+  let stack = []; // Stack stores [number, minSeen] pairs
+  // nums = [3, 1, 4, 2]
+  // num   1 4
+  // min   3 1
+
   for (let k = 1; k < nums.length; k++) {
-    //find previous greater element for nums[k] (nums[j])
+    // Find previous greater element for nums[k] (nums[j])
     while (stack.length && stack.at(-1)[0] <= nums[k]) {
       let stackTop = stack.pop();
     }
 
-    // Here, if stack is not empty, we have found previous greater element for nums[k] (nums[j])
-    // Also, check if nums[k] > min (nums[i]) => true!
+    // If there is a previous greater element, stack will not be empty
+    // If we found a nums[j] such that nums[j] > nums[k], check if nums[k] is greater than nums[i]
     if (stack.length && nums[k] > stack.at(-1)[1]) {
       return true;
     }
-
-    // push curr element and curr min to stack
     stack.push([nums[k], min]);
     min = Math.min(min, nums[k]);
   }
