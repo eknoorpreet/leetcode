@@ -37,34 +37,43 @@ num does not have any leading zeros except for the zero itself.
 
 /*
 
+Key Intuition:
+
+For the smallest number, we want smaller digits in more significant positions
+We should remove larger digits that appear before smaller digits (remove (pop) previous greater)
+When we have a choice to remove digits, we remove from the left first, as these positions have more impact on the final value
+
 54321, k = 1: We want to remove the largest digit at the most significant place (5) => 4321
 We want the values to be in monotonic increasing order. Keep going as long as the numbers are in increasing order and once we've gone through all digits, we start removing digits from right.
 
- */
+*/
 
 const removeKdigits = (num, k) => {
   //We want the stack to be in monotonic order
   let stack = [];
 
   for (const n of num) {
-    // While the stack is not empty and there are still removals to be made (k)
-    // and the last element in the stack is greater than the current digit
-    while (stack.length && k && stack.at(-1) > n) {
+    // Remove digits from stack while:
+    // 1. Stack isn't empty
+    // 2. We still have removals left (k > 0)
+    // 3. Last digit in stack is larger than current digit
+    while (stack.length && k > 0 && stack.at(-1) > n) {
       // pop element from the stack
       // and decrement k (1 removal made)
       stack.pop();
       k--;
     }
 
-    //As long as the values are in increasing order, add them to the stack
+    // As long as the values are in increasing order, add them to the stack
+    // Prevent leading zeros
     if (stack.length || n !== '0') {
-      // Prevent leading zeros
       stack.push(n);
     }
   }
 
   // Ours was a monotonic increasing stack. If we can still afford some removals,
-  // remvoe from the right (since largest values at the right as it's monotonic increasing stack)
+  // remove from the right (since largest values at the right as it's monotonic increasing stack)
+  // Remove from right
   if (k) {
     stack.splice(-k);
   }
