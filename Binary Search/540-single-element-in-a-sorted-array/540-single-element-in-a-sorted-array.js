@@ -54,11 +54,22 @@ const singleNonDuplicate1 = function (nums) {
 
 /*
 
-The size of the search space is always going to be 2(n) + 1.
+The size of the search space should always be 2(n) + 1.
+
+Key insight: In a sorted array where all elements except one appear twice, the single element disrupts the "paired" pattern. Before the single element, pairs start at even indices. After it, pairs start at odd indices.
+For example in [1,1,2,3,3,4,4]:
+
+Before 2: pairs start at even indices (0,1)
+After 2: pairs start at odd indices (3,4), (5,6)
+
+Find the start index of the current pair
+If mid is second element of pair, move back to first element (correctedMid)
+If correctedMid is odd, pattern is disrupted before this point
+If correctedMid is even, pattern is disrupted after this point
 
 */
 
-const singleNonDuplicate2 = function (nums) {
+const singleNonDuplicate = function (nums) {
   let left = 0;
   let right = nums.length - 1;
 
@@ -85,7 +96,10 @@ const singleNonDuplicate2 = function (nums) {
     // I want the search space to only be limited to potential answers.
     // Hence, if below condition is true, we don't include nums[mid - 1] or nums[mid]
     // (since they are not potential answers)
+
+    // If correctedMid is odd, pattern is disrupted before this point
     if (correctedMid % 2) right = correctedMid - 1;
+    // If correctedMid is even, pattern is disrupted after this point
     else left = mid + 1;
   }
 };
