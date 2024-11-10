@@ -91,6 +91,12 @@ We might be able to build: left = 1, 2: right = mid - 1 = 2. mid = 1. Formula sa
 We can build 1 row from 5 coins but we want to know the maximum no of rows we can complete.
 So, we try to maximize and do left = mid + 1 = 2, mid = 2. Formula says n/2*(n+1) = 2
 
+Basically, key Intuition:
+
+For k rows, we need 1 + 2 + 3 + ... + k coins
+This sum can be calculated using Gauss's formula: k(k+1)/2
+We can binary search for the largest k where this sum ≤ n
+
 */
 
 const arrangeCoins = function (n) {
