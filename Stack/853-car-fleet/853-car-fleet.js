@@ -137,7 +137,7 @@ const carFleet0 = function (target, position, speed) {
   return stack.length;
 };
 
-const carFleet = function (target, position, speed) {
+const carFleet1 = function (target, position, speed) {
   const pairs = [];
   const stack = [];
   // store pairs of positions and speeds.
@@ -168,5 +168,121 @@ const carFleet = function (target, position, speed) {
   return stack.length;
 };
 
-//TC: (n)
-//SC: (n)
+/**
+ * @param {number} target
+ * @param {number[]} position
+ * @param {number[]} speed
+ * @return {number}
+ */
+
+class Node {
+  constructor(value, next = null) {
+    this.value = value;
+    this.next = next;
+  }
+}
+
+class Stack {
+  constructor() {
+    this.first = null;
+    this.last = null;
+    this.length = 0;
+  }
+
+  //prepend (at head)
+  push(val) {
+    const newNode = new Node(val);
+    if (!this.first) {
+      this.last = newNode;
+    } else {
+      newNode.next = this.first;
+    }
+    this.first = newNode;
+    return ++this.length;
+  }
+
+  toArray() {
+    const nodes = [];
+    let currentNode = this.first;
+    while (currentNode) {
+      nodes.push(currentNode);
+      currentNode = currentNode.next;
+    }
+    return nodes;
+  }
+
+  pop() {
+    const removedNode = this.first;
+    if (this.first === this.last) {
+      this.first = null;
+      this.last = null;
+    } else {
+      this.first = this.first.next;
+    }
+    this.length--;
+    return removedNode.value;
+  }
+
+  peek() {
+    return this.first;
+  }
+}
+
+/*
+
+Key Intuition:
+
+Cars can't pass each other, so their relative positions matter
+We can calculate time to target for each car
+Cars that catch up to slower cars ahead form a fleet moving at the slower car's speed
+Sort by position to process cars from right to left (closest to target first)
+
+Why sort in descending order?
+
+target = 12
+position = [0, 2, 4], speed = [4, 2, 1]
+After sorting: [(4,1), (2,2), (0,4)]
+
+If we processed left to right [0,2,4]:
+- Hard to know if car at 0 will catch up to cars ahead
+- Need complex calculations for intersection points
+
+If we process right to left [4,2,0]:
+- Car at 4 determines first fleet's minimum speed
+- Can easily check if car at 2 catches up to this fleet
+- Then check if car at 0 catches up to resulting fleet(s)
+*/
+
+const carFleet = function (target, position, speed) {
+  // Pair each position with its speed
+  const pairs = position.map((p, i) => [p, speed[i]]);
+
+  // Sort by position in descending order (right to left)
+  pairs.sort((a, b) => b[0] - a[0]);
+
+  // Use a stack to track fleets
+  const stack = [];
+
+  // Calculate time to target for each car
+  for (const [pos, spd] of pairs) {
+    const timeToTarget = (target - pos) / spd;
+
+    // New fleet forms if:
+    // 1. First car
+    // 2. Takes longer than car ahead (won't catch up)
+    if (!stack.length || timeToTarget > stack[stack.length - 1]) {
+      stack.push(timeToTarget);
+    }
+    // If it takes less time, it will catch up and
+    // merge into the fleet ahead (don't push)
+  }
+
+  return stack.length;
+};
+
+/*
+
+Time Complexity: O(n log n) due to sorting
+Space Complexity: O(n) for the stack and pairs array
+
+*/
