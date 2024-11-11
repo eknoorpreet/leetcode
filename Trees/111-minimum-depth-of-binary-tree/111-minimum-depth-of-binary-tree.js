@@ -49,6 +49,63 @@ class MyQueue {
     return removedNode.value;
   }
 }
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+
+class QueueNode {
+  constructor(value, next = null) {
+    this.value = value;
+    this.next = next;
+  }
+}
+
+class MyQueue {
+  constructor() {
+    this.first = null;
+    this.last = null;
+    this.length = 0;
+  }
+
+  enqueue(val) {
+    const newNode = new QueueNode(val);
+    if (!this.first) {
+      this.first = newNode;
+    } else {
+      this.last.next = newNode;
+    }
+    this.last = newNode;
+    return ++this.length;
+  }
+
+  dequeue() {
+    if (!this.first) return null;
+    let removedNode = this.first;
+    if (this.first === this.last) {
+      this.first = null;
+      this.last = null;
+    } else {
+      this.first = this.first.next;
+    }
+    this.length--;
+    return removedNode.value;
+  }
+}
+
+/*
+
+We will use a queue to store all the nodes that are there at the same level. Starting with the root node, we will store the root node in the queue. Then we will iterate over all the current nodes in the queue and for each node we will add its left and right child to the queue. The important point to note here is that since we are traversing nodes level-wise, the first node which is a leaf, i.e. both left and right children are null; We will know that this is the node with the minimum depth.
+
+*/
 
 const minDepth = function (root) {
   let minDepth = 0;
@@ -71,9 +128,14 @@ const minDepth = function (root) {
   return minDepth;
 };
 
-/*Time complexity
-The time complexity of the above algorithm is O(n), where n is the total number of nodes in the tree. This is due to the fact that we traverse each node once.
+/*
 
-Space complexity
-Apart from the list (O(h)), the space complexity of the above algorithm will be O(N) as we will need O(n) space for the queue.
-Since we can have a maximum of n/2 nodes at any level (this could happen only at the lowest level), therefore we will need O(n) space to store them in the queue. */
+Time complexity: O(N)
+
+We will be iterating over each node in the tree only once; therefore, the total time complexity would be O(N).
+
+Space complexity: O(N)
+
+The only space required is the queue; the maximum number of nodes in the queue would be N. Hence, the space complexity would equal O(N).
+
+*/
