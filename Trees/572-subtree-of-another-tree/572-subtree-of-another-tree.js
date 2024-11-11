@@ -12,6 +12,39 @@
  * @return {boolean}
  */
 
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} subRoot
+ * @return {boolean}
+ */
+
+/*
+
+We need to check if subRoot appears anywhere within root
+A match means:
+
+Same structure
+Same values
+Can start at any node in root
+
+A tree is considered a subtree of itself
+
+At each node in root, we:
+
+Check if the current subtree matches subRoot
+If not, check the left subtree
+If not, check the right subtree
+
+*/
+
 const isSameTree = function (p, q) {
   //if both are null => same tree!
   if (!p && !q) return true;
@@ -35,6 +68,20 @@ const isSubtree = function (root, subRoot) {
   );
 };
 
-/*If m is the number of nodes in the 1st tree and n is the number of nodes in the 2nd tree, then
-Time complexity: O(m*n), worst case: for each node in the 1st tree, we need to check if isSameTree(Node s, Node t). Total m nodes, isSameTree(...) takes O(n) worst case
-Space complexity: O(height of 1st tree)(Or you can say: O(m) for worst case, O(logm) for average case) */
+/*
+
+Time and Space Complexity:
+
+Time: O(m * n) where:
+
+m is number of nodes in root
+n is number of nodes in subRoot
+At each node in root, we might need to check entire subRoot
+
+Space: O(h) where h is height of root
+
+Space used by recursion stack
+In worst case (skewed tree): O(n)
+In balanced tree: O(log n)
+
+*/
