@@ -5,24 +5,46 @@
 
 /*
 
-We can try DFS but it won't work. Why? Well, in DFS, we'll start fromt eh first orange until all oranges become rotten. Time = 5 mins but the answer is 4. How? Well, if we have 2 rotten organges (let's say, at the first and last col of the 1st row), they'll start spreading the rotten value to their respective adjacent oranges together (in the same minute). This calls for (level-size) BFS! We don't have to wait for DFS to finish on 1 cell to move on to the next; we can run a mult-source BFS at the same time!
+We can try DFS but it won't work. Why? Well, in DFS, we'll start from the first orange until all oranges become rotten. Time = 5 mins but the answer is 4. How? Well, if we have 2 rotten oranges (let's say, at the first and last col of the 1st row), they'll start spreading the rotten value to their respective adjacent oranges together (in the same minute). This calls for (level-size) BFS! We don't have to wait for DFS to finish on 1 cell to move on to the next; we can run a mult-source BFS at the same time!
 
-The key insight here is that BFS allows us to simulate the rotting process efficiently, with multiple rotten oranges contaminating adjacent fresh oranges simultaneously. This is why BFS is chosen over Depth-First Search (DFS), as it mimics the simultaneous spread of rotting.
+This is a "spreading" problem where changes happen simultaneously in multiple directions, making it perfect for BFS (Breadth-First Search) rather than DFS.
+It's specifically a "multi-source" BFS because we can have multiple rotten oranges at the start.
+
+Why BFS instead of DFS?
+
+DFS would process one path completely before moving to another
+In reality, rotting happens simultaneously from all rotten oranges
+BFS processes all rotten oranges at the same "level" (time step) together
+
+Key Points:
+
+Level-by-level processing ensures all oranges at the same distance become rotten simultaneously
+We keep track of fresh oranges to know when to stop
+We process the queue in "levels" using the size variable - this represents one minute of time
+We only increment time after processing all oranges at the current level
 
 */
 
 const orangesRotting = function (grid) {
-  if (!grid.length) return 0;
-  let time = 0;
-  let fresh = 0; //count fresh organges
   const rows = grid.length;
+  if (rows === 0) return 0;
+  let time = 0;
+  // There could still be an orange distant from rotten oranges => will never be rotten
+  // Therefore, keep track of fresh oranges
+  let fresh = 0;
+  const queue = []; // Store coordinates of rotten oranges
   const cols = grid[0].length;
-  const queue = []; //initalize queue to store rotten oranges
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      if (grid[r][c] === 1) fresh++;
-      //store cells to be processed.
-      if (grid[r][c] === 2) queue.push([r, c]);
+
+  // By adding all rotten oranges to the queue (and processing their adjacent
+  // fresh oranges to rotten), we perform a multi-source BFS
+  // (oranges being rotten from different sources)
+
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      // Count fresh oranges
+      if (grid[row][col] === 1) fresh++;
+      // Queue rotten oranges
+      if (grid[row][col] === 2) queue.push([row, col]);
     }
   }
   const directions = [
@@ -32,22 +54,29 @@ const orangesRotting = function (grid) {
     [0, -1],
   ];
   while (queue.length && fresh > 0) {
-    //we do it level by level so in 1 unit of time, we can make adjacent fresh oranges rotten. At the end of the level, we increment the counter
-    //size represents the number of rotten oranges at this minute level.
+    // Current level size
     const size = queue.length;
     for (let i = 0; i < size; i++) {
-      //process the current rotten orange
+      // Process the current rotten orange
       const [row, col] = queue.shift();
-      //visit all adjacent directions of the current (rotten) orange
+      // Visit all adjacent directions of the current (rotten) orange
       for (let [dr, dc] of directions) {
-        const r = row + dr;
-        const c = col + dc;
-        //if the new position is in bounds AND it's an orange
-        if (r >= 0 && c >= 0 && r < rows && c < cols && grid[r][c] === 1) {
-          //mark it "rotten" (so we don't visit it again since we only want to visit the (yet) fresh oranges about to become rotten)
-          grid[r][c] = 2;
-          //add the rotten orange to the queue to process later
-          queue.push([r, c]);
+        const newRow = row + dr;
+        const newCol = col + dc;
+        // If the new position is in bounds
+        // AND it's a fresh orange
+        if (
+          newRow >= 0 &&
+          newCol >= 0 &&
+          newRow < rows &&
+          newCol < cols &&
+          grid[newRow][newCol] === 1
+        ) {
+          // Mark it "rotten" (so we don't visit it again since we only want to visit the
+          // (yet) fresh oranges about to become rotten)
+          grid[newRow][newCol] = 2;
+          // Add the rotten orange to the queue to process later
+          queue.push([newRow, newCol]);
           //decrement fresh oranges
           fresh--;
         }
@@ -55,24 +84,13 @@ const orangesRotting = function (grid) {
     }
     time++;
   }
-  //if there's still fresh oranges left => return -1 else return the time
+  // If there's still fresh oranges left => return -1 else return the time
   return fresh === 0 ? time : -1;
 };
 
 /*
 
-Time Complexity:
-
-The code uses a Breadth-First Search (BFS) approach to process the grid.
-In the worst case, every cell in the grid is visited once.
-Each cell can be enqueued and dequeued from the queue at most once.
-The BFS runs until either all fresh oranges are rotten or it's clear that some oranges cannot be reached.
-So, the time complexity is O(m * n) because we potentially visit all cells in the grid once.
-Space Complexity:
-
-The space complexity is determined by the space used for the queue and other variables.
-The queue can potentially store all the fresh oranges at its maximum size.
-In the worst case, if all fresh oranges are initially adjacent to rotten oranges, the queue can grow to contain all k fresh oranges.
-The space complexity is therefore O(k), where k is the number of fresh oranges (initially).
+Time Complexity: O(m × n) where m and n are the dimensions of the grid
+Space Complexity: O(m × n) for the queue
 
 */
