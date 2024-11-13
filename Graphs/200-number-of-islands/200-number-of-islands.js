@@ -24,36 +24,40 @@ Counting Islands: The number of connected components (islands) you find during t
 */
 
 const numIslands = function (grid) {
-  //edge case: empty grid => 0 islands
+  // Edge case: empty grid => 0 islands
   if (!grid.length) return 0;
   const rows = grid.length;
   const cols = grid[0].length;
   const visited = new Set();
   let islands = 0;
+  const directions = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ]; // Down, Up, Right, Left
 
   const bfs = (r, c) => {
+    // Store cells to be processed.
     const queue = [];
-    visited.add(`${r}-${c}`);
+    // Add the first cell to queue
     queue.push([r, c]);
+    // And mark it as visited
+    visited.add(`${r}-${c}`);
     while (queue.length) {
+      // Process the cell (island)
       const [row, col] = queue.shift();
-      const directions = [
-        [1, 0],
-        [-1, 0],
-        [0, 1],
-        [0, -1],
-      ];
-      //visit all direcions of the current island
+      // Visit all adjacent direcions (neighbors) of the current island
       for (let [dr, dc] of directions) {
-        //[0, 0]:
-        //dr = 1, r = 0 + 1 = 1      | dc = 0, c = 0 + 0 = 0 => [1, 0] (go down)
-        //dr = -1, r = 0 + (-1) = -1 | dc = 0, c = 0 + 0 = 0 => [-1, 0] (go above)
-        //dr = 0, r = 0 + 0 = 0      | dc = 1, c = 0 + 1 = 1 => [0, 1] (go right)
-        //dr = 0, r = 0 + 0 = 0      | dc = -1, c = -1 + 0 = -1 => [0, -1] (go left)
+        // [0, 0]:
+        // dr = 1, r = 0 + 1 = 1      | dc = 0, c = 0 + 0 = 0 => [1, 0] (go down)
+        // dr = -1, r = 0 + (-1) = -1 | dc = 0, c = 0 + 0 = 0 => [-1, 0] (go above)
+        // dr = 0, r = 0 + 0 = 0      | dc = 1, c = 0 + 1 = 1 => [0, 1] (go right)
+        // dr = 0, r = 0 + 0 = 0      | dc = -1, c = -1 + 0 = -1 => [0, -1] (go left)
         const newRow = row + dr;
         const newCol = col + dc;
-        //if the new cell (neighbour) is in bounds (both rows, cols) AND it's a land
-        //AND unvisited
+        // If the new position is in bounds (both rows, cols) AND it's a land
+        // AND unvisited
         if (
           newRow >= 0 &&
           newCol >= 0 &&
@@ -62,24 +66,25 @@ const numIslands = function (grid) {
           grid[newRow][newCol] === '1' &&
           !visited.has(`${newRow}-${newCol}`)
         ) {
-          //add it to the queue to process later
+          // Add the cell to the queue to process later
           queue.push([newRow, newCol]);
-          //mark visited
+          // Mark visited
           visited.add(`${newRow}-${newCol}`);
         }
       }
     }
   };
 
-  //go through every row
+  // Go through every row
   for (let r = 0; r < rows; r++) {
-    //go through every column of every row
+    // Go through every column of every row
     for (let c = 0; c < cols; c++) {
-      //if we visit a land AND it has not been visited before
+      // If we encounter a land AND it has not been visited before, visit it
       if (grid[r][c] === '1' && !visited.has(`${r}-${c}`)) {
-        //run bfs on the island
+        // Run bfs on the island
+        // Explores the entire island connected to the current cell
         bfs(r, c);
-        //increment the island count after visiting all adjacent (land) cells
+        // Increment the island count after visiting all adjacent cells
         islands++;
       }
     }
