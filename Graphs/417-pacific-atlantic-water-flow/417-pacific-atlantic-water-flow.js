@@ -5,66 +5,114 @@
 
 /*
 
-Instead of checking if every cell can reach pacific and atlantic, we start from pacific and check the border cells.
+The brute-force approach would be to check every cell to see if it can reach both oceans through DFS/BFS.
+for(let r = 0; r < rows; r++) {
+    for(let c = 0; c < cols; c++) {
+        // Need two separate DFS - one for each ocean
+        const visitedPacific = new Set();
+        const visitedAtlantic = new Set();
+
+        const reachesPacific = dfs(r, c, visitedPacific, heights[r][c]);
+        const reachesAtlantic = dfs(r, c, visitedAtlantic, heights[r][c]);
+
+        if(reachesPacific && reachesAtlantic) {
+            result.push([r, c]);
+        }
+    }
+}
+
+Time Complexity: O(m×n×(m+n))
+
+For each cell (m×n)
+We do two DFS searches
+Each DFS can visit O(m+n) cells in worst case
+
+Think of a snake-like path to ocean
+
+Optimal:
+
+Key Intuition:
+Instead of checking each cell to see if it can flow to both oceans (top-down), we:
+
+Start from ocean borders and work inward (bottom-up)
+Find cells that can be reached from each ocean
+Find intersection of those cells
 
 A cell can flow to an adjacent smaller or equal height cell
 
 Going in the opposite direction (from the ocean to grid), it can flow to an adjacent greater or equal height cell
 
 */
+
 const pacificAtlantic = function (heights) {
-  //edge case: empty grid => 0
-  if (!heights.length) return 0;
+  // Edge case: empty grid => 0
   const rows = heights.length;
+  if (rows === 0) return 0;
   const cols = heights[0].length;
-  //cells that can reach pacific
-  const canReachPacific = new Set();
-  //cells that can reach atlantic
-  const canReachAtlantic = new Set();
   const result = [];
-  const dfs = (r, c, visited, prevHeight) => {
-    //if the cell has already been visited or out of bounds (we're going FROM the ocean so if we reach the ocean => return) or current height is smaller => return
+  // Cells reachable from Pacific
+  const canReachPacific = new Set();
+  // Cells reachable from Atlantic
+  const canReachAtlantic = new Set();
+  const directions = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+
+  const dfs = (row, col, visited, prevHeight) => {
+    // Skip if:
+    // - Already visited
+    // - Out of bounds (we're going FROM the ocean so if we reach the ocean => return)
+    // - Current height < Previous height (water can't flow up)
     if (
-      visited.has(`${r}-${c}`) ||
-      r < 0 ||
-      c < 0 ||
-      r === rows ||
-      c === cols ||
-      heights[r][c] < prevHeight
+      row < 0 ||
+      col < 0 ||
+      row === rows ||
+      col === cols ||
+      visited.has(`${row}-${col}`) ||
+      heights[row][col] < prevHeight
     )
       return;
-    visited.add(`${r}-${c}`);
-    dfs(r + 1, c, visited, heights[r][c]);
-    dfs(r - 1, c, visited, heights[r][c]);
-    dfs(r, c + 1, visited, heights[r][c]);
-    dfs(r, c - 1, visited, heights[r][c]);
+
+    visited.add(`${row}-${col}`);
+
+    // Check all neighbors
+    for (const [dr, dc] of directions) {
+      const newRow = dr + row;
+      const newCol = dc + col;
+      dfs(newRow, newCol, visited, heights[row][col]);
+    }
   };
 
-  //Explore Borders (top and bottom)
-
-  for (let c = 0; c < cols; c++) {
-    //go through every cell in 1st row (row = 0, all columns) (pacific)
-    //we can go to greater or equal height cells
-    dfs(0, c, canReachPacific, heights[0][c]);
-    //go through every cell in last row (last row, all columns) (atlantic)
-    dfs(rows - 1, c, canReachAtlantic, heights[rows - 1][c]);
+  // Explore Borders (top and bottom)
+  for (let col = 0; col < cols; col++) {
+    // Go through every cell in 1st row (row = 0, all columns) (pacific)
+    // We can go to greater or equal height cells
+    dfs(0, col, canReachPacific, heights[0][col]);
+    // Go through every cell in last row (last row, all columns) (atlantic)
+    dfs(rows - 1, col, canReachAtlantic, heights[rows - 1][col]);
   }
 
-  //Explore Borders (left and right)
-
-  for (let r = 0; r < rows; r++) {
-    //go through every cell in 1st col ( all rows, col = 0) (pacific)
-    dfs(r, 0, canReachPacific, heights[r][0]);
-    //go through every cell in last col (all rows, last col) (atlantic)
-    dfs(r, cols - 1, canReachAtlantic, heights[r][cols - 1]);
+  // Explore Borders (left and right)
+  for (let row = 0; row < rows; row++) {
+    // Go through every cell in 1st col ( all rows, col = 0) (pacific)
+    dfs(row, 0, canReachPacific, heights[row][0]);
+    // Go through every cell in last col (all rows, last col) (atlantic)
+    dfs(row, cols - 1, canReachAtlantic, heights[row][cols - 1]);
   }
 
-  //Iterate through all cells in the grid
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      //If a cell exists in both the sets => add to result
-      if (canReachPacific.has(`${r}-${c}`) && canReachAtlantic.has(`${r}-${c}`))
-        result.push([r, c]);
+  // Iterate through all cells in the grid
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      // If a cell exists in both the sets => add to result
+      if (
+        canReachPacific.has(`${row}-${col}`) &&
+        canReachAtlantic.has(`${row}-${col}`)
+      ) {
+        result.push([row, col]);
+      }
     }
   }
   return result;
@@ -72,19 +120,15 @@ const pacificAtlantic = function (heights) {
 
 /*
 
-Time Complexity:
+Time & Space:
 
-The code performs a Depth-First Search (DFS) traversal on the grid.
-In the worst case, the DFS function is called for each cell in the grid, and each cell is visited at most once.
-The grid has m rows and n columns, so there are a total of m * n cells.
-Therefore, the time complexity of the DFS traversal is O(m * n).
+Time: O(m×n) - visit each cell once from each ocean
+Space: O(m×n) - for visited sets and recursion stack
 
-Space Complexity:
+Key Insights:
 
-The space used by the sets and arrays depends on the number of cells that can be reached from either ocean and the number of cells that need to be visited.
-In the worst case, all cells can be reached from both oceans (i.e., they can all flow to both oceans), so both canReachPacific and canReachAtlantic sets could contain all m * n cells.
-Therefore, the worst-case space complexity is O(m * n) for the sets and O(m * n) for the visited set.
-The result array stores the coordinates of cells that meet the conditions, and in the worst case, it can also contain all m * n cells.
-Overall, the space complexity is O(m * n) due to the sets and the result array.
+Reverse thinking simplifies problem
+Starting from oceans eliminates need to find paths to ocean
+Using sets for tracking makes intersection finding efficient
 
 */
