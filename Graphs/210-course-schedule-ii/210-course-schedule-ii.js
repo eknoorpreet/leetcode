@@ -4,13 +4,23 @@
  * @return {number[]}
  */
 
+/*
+
+Key Insight:
+
+Still a graph problem where we need to detect cycles
+We need to track the order in which we complete courses
+The order we add courses to result is important - it's a topological sort
+
+*/
+
 const findOrder = function (numCourses, prerequisites) {
   const result = [];
-  //course mapped to its prerequisites
-  //(adjacency list: node mapped to its edges)
+  // course mapped to its prerequisites
+  // (adjacency list: node mapped to its edges)
   const prerequisiteMap = new Map();
-  const visited = new Set(); //to detect cycles
-  const cycle = new Set(); //to detect cycles
+  const visited = new Set(); // to track completed courses
+  const cycle = new Set(); // to detect cycles
   for (let n = 0; n < numCourses; n++) {
     prerequisiteMap.set(n, []);
   }
@@ -20,28 +30,28 @@ const findOrder = function (numCourses, prerequisites) {
   }
 
   const dfs = (course) => {
-    //base case: course already in cycle => false => []
+    // Base case: course already in cycle => false => []
     if (cycle.has(course)) return false;
-    //base case: visiting a course already visited => true
+    // Base case: visiting a course already visited => true
     if (visited.has(course)) return true;
-    //Here, we cannot rely on checking an empty [] for the prereqs of the
-    //course like: if(!prerequisiteMap.get(course).length) return true
-    //because the focus is on providing a valid ordering
-    //The above length condition would prevent us from actually visiting a
-    //course and so, we won't be able to push it to the result
-    //Whereas, the visited set marks it as 'visited' adnd actually visits it
-    //(goes through its (empty) prereqs) and then pushes it to the result
+    // Here, we cannot rely on checking an empty [] for the prereqs of the
+    // course like: if(!prerequisiteMap.get(course).length) return true
+    // because the focus is on providing a valid ordering
+    // The above length condition would prevent us from actually visiting a
+    // course and so, we won't be able to push it to the result
+    // Whereas, the visited set marks it as 'visited' and actually visits it
+    // (goes through its (empty) prereqs) and then pushes it to the result
 
     cycle.add(course);
     for (let prereq of prerequisiteMap.get(course)) {
-      //if one prereq cannot be completed => the course cannot be completed (cycle)
+      // If one prereq cannot be completed => the course cannot be completed (cycle)
       if (!dfs(prereq)) return false;
     }
-    //already finished visiting the course
+    // Already finished visiting the course
     cycle.delete(course);
     visited.add(course);
     result.push(course);
-    //course can be visited => set it to []
+    // Course can be visited => set it to []
     return true;
   };
   for (let i = 0; i < numCourses; i++) {
@@ -49,6 +59,17 @@ const findOrder = function (numCourses, prerequisites) {
   }
   return result;
 };
+
+/*
+
+Why This Works:
+
+DFS ensures prerequisites are processed first
+Adding to result after processing prerequisites ensures valid ordering
+Cycle detection prevents invalid cases
+Visited set prevents reprocessing and ensures each course appears once
+
+*/
 
 /*
 
