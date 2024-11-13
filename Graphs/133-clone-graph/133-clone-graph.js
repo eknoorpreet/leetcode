@@ -11,20 +11,33 @@
  * @return {Node}
  */
 
+/*
+
+Key Insight:
+The main challenge is handling cycles in the graph. We need to:
+
+Keep track of nodes we've already cloned
+Ensure we don't get stuck in infinite recursion
+Maintain the same connection structure in our copy
+
+*/
+
 const cloneGraph = function (node) {
+  // Base case
   if (!node) return null;
-  const oldToNew = new Map(); //map the old nodes to the new (copy) nodes
+  const originalToCopy = new Map(); // Maps original nodes to their copies
   const clone = (node) => {
-    //if we already created a clone of the node, just return it
-    if (oldToNew.has(node)) return oldToNew.get(node);
-    //else, clone the node
+    // If already cloned, return the existing copy
+    // This is crucial to avoid infinite recursion and ensure we reuse already cloned nodes.
+    if (originalToCopy.has(node)) return originalToCopy.get(node);
+    // Clone it
     const copy = new Node(node.val);
-    //and map the old node to the new (or copy) node
-    oldToNew.set(node, copy);
-    //but, before adding neighbors to the current node, create a copy of them first => deep copy (recursive)
-    //go through node's neighbors and push them to the copy node's neighbors
-    for (let i in node.neighbors) {
-      copy.neighbors.push(clone(node.neighbors[i]));
+    // Map original to copy BEFORE recursing
+    originalToCopy.set(node, copy);
+    // Before adding neighbors to the current node
+    for (let neighbor of node.neighbors) {
+      // clone them first => deep copy (recursive)
+      copy.neighbors.push(clone(neighbor));
     }
     return copy;
   };
@@ -33,6 +46,12 @@ const cloneGraph = function (node) {
 
 /*
 
+Key Points:
+
+HashMap prevents infinite recursion in cycles
+We map nodes BEFORE processing neighbors
+DFS naturally builds the deep copy
+We maintain the same connection structure
 Time Complexity:
 
 The time complexity of the code is determined by the DFS traversal of the entire graph. In the worst case, the algorithm visits each node and each edge exactly once.
