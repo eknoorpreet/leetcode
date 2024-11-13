@@ -5,49 +5,86 @@
 
 /*
 
-"capture all regions that are 4-directionally surrounded by 'X'."
+Understanding the problem:
+
+["X","O","X","X"]
+["O","O","X","X"]
+["X","O","O","X"]
+["X","O","X","X"]
+
+Result:
+
+["X","O","X","X"]
+["O","O","X","X"]  // These O's stay because they're connected
+["X","O","O","X"]  // to border O's through other O's
+["X","O","X","X"]
+
+Reverse thinking:
+
+"Capture all regions that are 4-directionally surrounded by 'X'."
 = "Don't capture anything on the border"" or "capture everything except unsurrrounded (on the border) regions""
+
+Basically, core intuition:
+Instead of trying to find surrounded regions (which is more complex), we:
+    Find all unsurrounded regions (O's connected to border)
+    Everything else must be surrounded
 
 */
 
-const solve = function (board) {
-  if (!board.length) return 0;
+const solve1 = function (board) {
   const rows = board.length;
+  if (rows === 0) return board;
   const cols = board[0].length;
-  const visited = new Set();
-  const dfs = (r, c) => {
-    //invalid (out of bounds) or not "O" => return
-    if (r < 0 || c < 0 || r === rows || c === cols || board[r][c] !== 'O')
+  const directions = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+
+  const dfs = (row, col) => {
+    // Invalid (out of bounds) or not "O" => return
+    if (
+      row < 0 ||
+      row === rows ||
+      col < 0 ||
+      col === cols ||
+      board[row][col] !== 'O'
+    )
       return;
-    //else, change to a temporary mark "T"
-    board[r][c] = 'T';
-    //mark it as visited
-    // visited.add(`${r}-${c}`)
-    //we check for the neighbours since if they are "O" (even in 1 direction), they are also unsurrounded (by "X")
-    dfs(r + 1, c), dfs(r - 1, c), dfs(r, c + 1), dfs(r, c - 1);
+    // Else, change to a temporary mark "T"
+    board[row][col] = 'T';
+    // We check for the neighbours since if they are "O" (even in 1 direction), they are also
+    // unsurrounded (by "X")
+    for (const [dr, dc] of directions) {
+      const newRow = dr + row;
+      const newCol = dc + col;
+      dfs(newRow, newCol);
+    }
   };
 
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      //connected to the border => mark them "T"
+  // Find and capture the unsurrounded regions (connected to the border => mark them "T")
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
       if (
-        board[r][c] === 'O' &&
-        (r === 0 || r === rows - 1 || c === 0 || c === cols - 1)
-      )
-        dfs(r, c);
+        board[row][col] === 'O' &&
+        (row === 0 || col === 0 || row === rows - 1 || col === cols - 1)
+      ) {
+        dfs(row, col);
+      }
     }
   }
 
-  //Here, any "O" is definitely surrounded (since unsurrounded were marked "T")
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      //surrounded "O" => flip to ""X
-      if (board[r][c] === 'O') {
-        board[r][c] = 'X';
-      } else if (board[r][c] === 'T') {
-        //unsurrounded "T" (prev "O")
-        //flip back to "O"
-        board[r][c] = 'O';
+  // Here, any "O" is definitely surrounded (since unsurrounded were marked "T")
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      // surrounded "O" => flip to ""X
+      if (board[row][col] === 'O') {
+        board[row][col] = 'X';
+      } else if (board[row][col] === 'T') {
+        // unsurrounded "T" (prev "O")
+        // flip all T's back to "O"
+        board[row][col] = 'O';
       }
     }
   }
@@ -56,22 +93,15 @@ const solve = function (board) {
 
 /*
 
-Time Complexity:
+Time & Space Complexity:
 
-The code consists of two main parts: the first part identifies and marks cells as 'T' if they are connected to the border,
-and the second part captures surrounded regions by flipping 'O' to 'X' and 'T' back to 'O'.
-The first part, where you mark cells as 'T', involves iterating through the entire board with nested loops (r and c).
-For each cell, you check if it's on the border, and if so, you perform a DFS traversal.
-The DFS traversal itself can visit each cell at most once.
-The second part, where you capture surrounded regions and perform replacements,
-also iterates through the entire board.
-Therefore, the overall time complexity of the code is O(m * n), where m is the number of rows in the board, and n is the number of columns.
+Time: O(rows × cols) - visit each cell at most twice
+Space: O(rows × cols) - for recursion stack in worst case
 
-Space Complexity:
+Key Insights:
 
-The recursive DFS function uses the call stack to store the recursion state.
-In the worst case, if every cell on the board is part of a surrounded region,
-the maximum depth of recursion would be the total number of cells, which is m * n.
-Therefore, the overall space complexity of the code is O(m * n) due to the space used by the call stack during the DFS traversal.
+Reverse thinking makes problem simpler
+Using temporary mark 'T' avoids need for visited set
+Only need to start DFS from border cells
 
 */
