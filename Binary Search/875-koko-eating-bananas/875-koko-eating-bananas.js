@@ -37,6 +37,26 @@ piles.length <= h <= 10^9
  * @return {number}
  */
 
+/*
+
+Why Binary Search Works:
+
+If speed X is too slow → any speed < X is also too slow
+If speed X works → any speed > X also works
+This monotonic property makes binary search valid
+
+Why Math.ceil?
+
+If pile = 10, speed = 3
+Need 4 hours (⌈10/3⌉) because:
+
+Hour 1: eat 3
+Hour 2: eat 3
+Hour 3: eat 3
+Hour 4: eat 1 (remaining)
+
+*/
+
 const isJobPossible = (arr, mid, h) => {
   let hoursCount = 0;
   for (const bananas of arr) {
