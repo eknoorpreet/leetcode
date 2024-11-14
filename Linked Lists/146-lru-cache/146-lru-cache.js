@@ -41,6 +41,41 @@ At most 2 * 10^5 calls will be made to get and put.
 
 */
 
+/*
+
+/*
+
+Key Intuition:
+
+Need O(1) access → Use HashMap
+Need O(1) removal/addition → Use Doubly Linked List
+Most recently used → Move to front
+Least recently used → At the end
+
+In order to preserve the ordering we need a doubly linked list. Why doubly?
+Able to reorder nodes in O(1) time.
+
+Head: Least Recently Used
+
+Tail: Most Recently Used
+
+Why This Design Works:
+
+HashMap (this.cache):
+
+Provides O(1) access to nodes
+Stores key-node pairs
+
+
+Doubly Linked List:
+
+Head = Most Recently Used
+Tail = Least Recently Used
+Dummy nodes simplify edge cases
+
+
+*/
+
 function Node(key, val, prev, next) {
   this.key = key;
   this.val = val;
@@ -140,14 +175,29 @@ LRUCache.prototype.put = function (key, value) {
       // this.tail is the dummy tail
       // this.tail.prev is the actual tail
       const tail = this.tail.prev;
-      const prevTail = tail.prev;
-      prevTail.next = tail.next;
-      tail.next.prev = prevTail;
+      this.removeNode(tail);
       delete this.cache[tail.key];
       this.size--;
     }
   }
 };
+
+/*
+
+Time & Space Complexity:
+
+Time: O(1) for both get and put
+
+HashMap provides O(1) lookup
+Linked list operations are all O(1)
+
+
+Space: O(capacity)
+
+HashMap stores at most capacity items
+Linked list stores at most capacity nodes
+
+*/
 
 /**
  * Your LRUCache object will be instantiated and called as such:
