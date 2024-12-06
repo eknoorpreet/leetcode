@@ -138,8 +138,7 @@ const isValid = function (s) {
     }
   }
   // Loop ends, stack still not empty? => brackets not closed/balanced => false
-  if (stack.length !== 0) return false;
-  return true;
+  return stack.length === 0;
 };
 
 //TC: O(n)
