@@ -91,13 +91,38 @@ class Stack {
   }
 }
 
+/*
+
+Use a stack to track asteroids and resolve collisions systematically
+
+Collisions only occur when:
+
+If this isn't the first asteroid
+A negative asteroid (moving left) meets a positive asteroid (moving right)
+
+Three possible outcomes when asteroids collide:
+
+If the incoming asteroid is larger, it destroys the previous asteroid
+If the previous asteroid is larger, the incoming asteroid is destroyed
+If both are equal in size, both are destroyed
+
+Make sure to only process collisions between opposite-moving asteroids: stack.length && asteroid < 0 && stack.at(- 1) > 0
+
+What if: asteroid > 0 && stack.at(- 1) < 0
+
+That means that the last asteroid is moving left while the current asteroid is moving right. Will never collide!
+
+Only non-zero (non-destroyed) asteroids are pushed to the stack. This ensures only surviving asteroids remain. Furthermore, this way, we know that when destroy current asteroid (set to 0), we don't add it to the stack
+
+*/
+
 const asteroidCollision = function (asteroids) {
   const stack = [];
   for (let asteroid of asteroids) {
     /* We only need to resolve collisions under the following conditions:
-              - if this isn't the first asteroid (stack is non-empty)
-              - current asteroid is -ve (going left)
-              - previous asteroid (top of the stack) was +ve (going right)*/
+            - if this isn't the first asteroid (stack is non-empty)
+            - current asteroid is -ve (going left)
+            - previous asteroid (top of the stack) was +ve (going right)*/
     while (stack.length && asteroid < 0 && stack.at(-1) > 0) {
       // -5 - 10 = -15 (WRONG!)
       // 10 - (-5) = 15 (WRONG!)
@@ -107,6 +132,7 @@ const asteroidCollision = function (asteroids) {
       // diff is +ve => +ve / prev asteroid wins, destroy curr
 
       // But we can also just do this:
+      // Multiplying negative asteroid by -1 converts it to positive for comparison
       const diff = stack.at(-1) - asteroid * -1;
       // diff is -ve => curr asteriod bigger in size => wins
       // curr asteriod wins
@@ -124,8 +150,16 @@ const asteroidCollision = function (asteroids) {
         stack.pop(); // prev destroyed
       }
     }
-    //make sure the destroyed asteroid (set to 0) is not pushed to stack
+    // Make sure the destroyed asteroid (set to 0) is not pushed to stack
     if (asteroid !== 0) stack.push(asteroid);
   }
   return stack;
 };
+
+/*
+
+Time Complexity: O(n), where n is the number of asteroids
+
+Space Complexity: O(n) to store the stack
+
+*/
