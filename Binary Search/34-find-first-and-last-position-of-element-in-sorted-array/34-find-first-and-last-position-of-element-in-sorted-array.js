@@ -65,7 +65,7 @@ const search = (nums, target, findLeftIndex) => {
   return index;
 };
 
-const searchRange = function (nums, target) {
+const searchRange0 = function (nums, target) {
   // Run Binary Seach to find the left index
   let leftPosition = search(nums, target, true);
   // Run Binary Seach to find the right index
@@ -73,5 +73,48 @@ const searchRange = function (nums, target) {
   return [leftPosition, rightPosition];
 };
 
-//TC: O(log n)
-//SC: O(1)
+const findFirstPosition = function (nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
+  let first = -1;
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+    if (nums[mid] === target) {
+      first = mid;
+      right = mid - 1;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else if (nums[mid] > target) {
+      right = mid - 1;
+    }
+  }
+  return first;
+};
+
+const findLastPosition = function (nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
+  let last = -1;
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+    if (nums[mid] === target) {
+      last = mid;
+      left = mid + 1;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else if (nums[mid] > target) {
+      right = mid - 1;
+    }
+  }
+  return last;
+};
+
+const searchRange = function (nums, target) {
+  const first = findFirstPosition(nums, target);
+  if (first === -1) return [-1, -1];
+  const last = findLastPosition(nums, target);
+  return [first, last];
+};
+
+// TC: O(log n)
+// SC: O(1)
