@@ -3,10 +3,9 @@
  * @return {number}
  */
 
-/*This problem can be viewed as a graph problem because the grid can be modeled as a graph where each cell represents a node,
-and edges are formed between adjacent land cells (horizontally and vertically).
-In this graph, an island is essentially a connected component, which is a subset of nodes that are
-connected to each other through edges, and these nodes cannot be reached from the rest of the graph.
+/*
+
+This problem can be viewed as a graph problem because the grid can be modeled as a graph where each cell represents a node, and edges are formed between adjacent land cells (horizontally and vertically). In this graph, an island is essentially a connected component, which is a subset of nodes that are connected to each other through edges, and these nodes cannot be reached from the rest of the graph.
 
 Here's why it can be considered a graph problem:
 
@@ -16,10 +15,12 @@ Edges: Edges are formed between adjacent land cells (cells containing '1'). If t
 
 Connected Components: An island in the grid corresponds to a connected component in the graph. In a connected component, every node can be reached from any other node within the same component by following the edges.
 
-Traversal: To find the number of islands, you can perform graph traversal techniques like Depth-First Search (DFS) or Breadth-First Search (BFS). You start from an unvisited land cell ('1') and explore all the connected land cells within the same island using DFS or BFS.
-After visiting all nodes in an island, you move on to the next unvisited land cell to find the next island.
+Traversal: To find the number of islands, you can perform graph traversal techniques like Depth-First Search (DFS) or Breadth-First Search (BFS). You start from an unvisited land cell ('1') and explore all the connected land cells within the same island using DFS or BFS. After visiting all nodes in an island, you move on to the next unvisited land cell to find the next island.
 
 Counting Islands: The number of connected components (islands) you find during traversal corresponds to the number of islands in the grid.
+
+Important: Only add valid cells (within bounds, land, not visited yet) to the queue. For initial cells,
+the for loops check the counditions. For neiighbors, check before adding to the queue.
 
 */
 
@@ -45,9 +46,9 @@ const numIslands = function (grid) {
     // And mark it as visited
     visited.add(`${r}-${c}`);
     while (queue.length) {
-      // Process the cell (island)
+      // Process the cell (land)
       const [row, col] = queue.shift();
-      // Visit all adjacent direcions (neighbors) of the current island
+      // Visit all adjacent direcions (neighbors) of the current land
       for (let [dr, dc] of directions) {
         // [0, 0]:
         // dr = 1, r = 0 + 1 = 1      | dc = 0, c = 0 + 0 = 0 => [1, 0] (go down)
@@ -66,7 +67,7 @@ const numIslands = function (grid) {
           grid[newRow][newCol] === '1' &&
           !visited.has(`${newRow}-${newCol}`)
         ) {
-          // Add the cell to the queue to process later
+          // Add the land cell to the queue to process later
           queue.push([newRow, newCol]);
           // Mark visited
           visited.add(`${newRow}-${newCol}`);
@@ -82,7 +83,7 @@ const numIslands = function (grid) {
       // If we encounter a land AND it has not been visited before, visit it
       if (grid[r][c] === '1' && !visited.has(`${r}-${c}`)) {
         // Run bfs on the island
-        // Explores the entire island connected to the current cell
+        // Explore the entire island connected to the current cell
         bfs(r, c);
         // Increment the island count after visiting all adjacent cells
         islands++;
@@ -92,10 +93,14 @@ const numIslands = function (grid) {
   return islands;
 };
 
-/*This BFS approach ensures that all cells of each island are visited and counted
+/*
+
+This BFS approach ensures that all cells of each island are visited and counted
 while avoiding revisiting cells that are part of previously explored islands.
 The time complexity is O(m * n), where m and n are the dimensions of the grid,
-and the space complexity is also O(m * n) due to the visited set and the BFS queue. */
+and the space complexity is also O(m * n) due to the visited set and the BFS queue.
+
+*/
 
 const numIslandsDFS = function (grid) {
   if (!grid.length) return 0;
@@ -142,7 +147,9 @@ const numIslandsDFS = function (grid) {
   return islands;
 };
 
-/*Time Complexity:
+/*
+
+Time Complexity:
 
 In the worst case, the DFS algorithm visits each cell in the grid once and performs a constant amount of work for each cell.
 The main loop iterates through all rows and columns of the grid, which results in a total of O(m * n) iterations, where 'm' is the number of rows, and 'n' is the number of columns.
