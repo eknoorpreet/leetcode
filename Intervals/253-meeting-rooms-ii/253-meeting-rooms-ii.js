@@ -28,10 +28,13 @@ Constraints:
 
 /*
 
+For intervals: [[0,30],[5,20],[10,15]] (all clashing)
+
+"We need at least 3 rooms" (as max rooms needed at 1 point = 3)
+
 Number of conference rooms = max rooms needed at any point
 
 Key insight: We can handle starts and ends separately
-
 
 Why This Works:
 
