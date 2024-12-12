@@ -68,13 +68,30 @@ const maxArea0 = function (height) {
 // SC: O(1)
 
 /*
+
 Why Two Pointers Work:
 
 Start with widest possible container
-When moving pointers:
 
-If we move the higher wall inward, width decreases and height can't increase
-If we move the lower wall inward, we might find a higher wall that increases area
+The area of water is determined by two factors:
+
+Width (distance between lines)
+Height (the shorter of the two lines)
+
+Key Insight: Moving Pointers
+
+If we move the pointer at the longer line inwards, we will NOT increase the area
+Why? Because the area is always limited by the shorter line
+Moving the longer line inward will:
+a) Reduce the width
+b) NOT potentially increase the height (since the height is already capped by the shorter line)
+
+Moving the Shorter Line's Pointer
+
+Moving the shorter line's pointer is more promising
+Even though we're reducing the width, we might find a taller line
+A taller line could potentially compensate for the reduced width
+This gives us a chance to increase the total area
 
 Therefore, always move the shorter wall's pointer inward
 
@@ -87,13 +104,13 @@ const maxArea = function (height) {
   let result = 0;
   while (left < right) {
     const width = right - left;
-    const h = Math.min(height[left], height[right]);
+    const h = Math.min(height[left], height[right]); // shorter line
     const area = width * h;
     result = Math.max(area, result);
 
     // Let the higher wall remain.
     // Move the pointer of the shorter wall in the hope
-    // that we might find a higher wall that increases area
+    // that we might find a higher wall that increases area (See Note)
     if (height[left] < height[right]) {
       left++;
     } else {
