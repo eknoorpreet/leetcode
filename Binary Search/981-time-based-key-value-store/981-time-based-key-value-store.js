@@ -39,11 +39,17 @@ At most 2 * 10^5 calls will be made to set and get.
 
 /*
 
-The core idea is to use a hash map (Map) where:
+/*
 
-Each key maps to an array of [value, timestamp] pairs
-The array is sorted by timestamp
-This allows efficient storage and retrieval of time-based values
+Intuition
+If we read the problem statement carefully, it is mentioned
+that "All the timestamps of set are strictly increasing", thus even if we use an array
+to store the timestamps, they will be pushed in sorted order. But we also need to
+store values with each timestamp, so we will store (timestamp, value) pairs
+in the key's bucket which will be an array.
+
+So now our data structure keyTimeMap will look like this:
+HashMap(key, Array(Pair(timestamp, value))).
 
 */
 
@@ -108,7 +114,6 @@ TimeMap.prototype.get = function (key, timestamp) {
     } else {
       right = mid - 1;
     }
-    // if(values[mid] < timestamp)
   }
   return result;
 };
@@ -124,8 +129,23 @@ TimeMap.prototype.get = function (key, timestamp) {
 
 Time and Space Complexity
 
-set(): O(1) amortized time
-get(): O(log n) time complexity due to binary search
-Space: O(m), where m is total number of set operations
+If M is the number of set function calls, N is the number of get function calls, and
+L is average length of key and value strings.
+
+set(): in each call, we push a (timestamp, value) pair in the key bucket, which takes
+O(L) time to hash the string. Thus, for M calls overall it will take, O(M⋅L) time.
+
+get(): we use binary search on the key's bucket which can have at most M elements and to
+hash the string it takes O(L) time, thus overall it will take O(L⋅logM) time for binary search.
+
+And, for N calls overall it will take, O(N⋅L⋅logM) time.
+
+Space:
+
+In the set() function, in each call we store one value string of length L, which takes O(L) space.
+Thus, for M calls we may store M unique values, so overall it may take O(M⋅L) space.
+
+In the get() function, we are not using any additional space.
+Thus, for all N calls it is a constant space operation.
 
 */
