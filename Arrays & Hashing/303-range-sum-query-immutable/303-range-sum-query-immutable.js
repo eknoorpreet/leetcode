@@ -29,13 +29,53 @@ Constraints:
 1 <= nums.length <= 104
 -105 <= nums[i] <= 105
 0 <= left <= right < nums.length
-At most 104 calls will be made to sumRange.
+At most 10^4 calls will be made to sumRange.
 
 /**
  * @param {number[]} nums
  */
-const NumArray = function (nums) {
+var NumArray0 = function (nums) {
   this.nums = nums;
+};
+
+/**
+ * @param {number} left
+ * @param {number} right
+ * @return {number}
+ */
+NumArray0.prototype.sumRange = function (left, right) {
+  let result = 0;
+  for (let i = left; i <= right; i++) {
+    result += this.nums[i];
+  }
+  return result;
+};
+
+/*
+
+Optimization:
+
+Approach: Prefix Sum (Cumulative Sum)
+The key idea behind this solution is to precompute a prefix sum array during the constructor,
+which allows us to calculate range sums in O(1) time complexity for each query.
+
+Intuition:
+
+Instead of calculating the sum from scratch for each range query, we precompute a cumulative
+sum array.
+The prefix sum array stores the running total of elements up to each index.
+To get the sum of a range [left, right], we can subtract the cumulative sum up to the
+left boundary from the cumulative sum up to the right boundary.
+
+*/
+
+const NumArray = function (nums) {
+  this.prefix = [];
+  let sum = 0;
+  for (let num of nums) {
+    sum += num;
+    this.prefix.push(sum);
+  }
 };
 
 /**
@@ -45,11 +85,23 @@ const NumArray = function (nums) {
  */
 NumArray.prototype.sumRange = function (left, right) {
   let result = 0;
-  for (let i = left; i <= right; i++) {
-    result += this.nums[i];
-  }
-  return result;
+  // Handle the case when left is the first element
+  let leftSum = left > 0 ? this.prefix[left - 1] : 0;
+  // Get the cumulative sum up to the right boundary
+  let rightSum = this.prefix[right];
+  // Return the difference to get the range sum
+  return rightSum - leftSum;
 };
+
+/*
+
+Time and Space Complexity:
+
+Constructor: O(n) time, O(n) space
+Range Query: O(1) time
+Space: O(n) to store the prefix sum array
+
+*/
 
 /**
  * Your NumArray object will be instantiated and called as such:
