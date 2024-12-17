@@ -251,3 +251,27 @@ class MaxStack {
  * var param_4 = obj.peekMax()
  * var param_5 = obj.popMax()
  */
+
+/*
+
+Complexity Analysis:
+
+Let N be the number of elements to add to the stack.
+
+Time Complexity:
+
+push: O(logN), it costs O(logN) to add an element to heap and O(1) to add an it to stack.
+The amortized time complexity of operations caused by a single pop/popMax call is O(logN).
+For a pop call, we first remove the last element in stack and add its ID to removed in O(1),
+and result in a deletion of the top element in heap in the future (when peekMax or popMax is
+called), which has a time complexity of logN. Similarly, popMax needs O(logN) immediately
+and O(1) in the operations later. Note that because we lazy-update the two data structures,
+future operations might never happen in some cases. But even in the worst cases, the upper
+bound of the amortized time complexity is still only O(logN).
+
+top: O(1), excluding the time cost related to popMax calls we discussed above.
+peekMax: O(logN), excluding the time cost related to pop calls we discussed above.
+
+Space Complexity: O(N), the maximum size of the heap, stack, and removed.
+
+*/
