@@ -62,7 +62,9 @@ Realize that the problem is about exploring different water configurations
 Each state is defined by the amount of water in two jugs
 Possible operations are limited (fill, empty, pour)
 
-Perform an exhaustive search of all possible water configurations (level by level). By exploring every possible way to move water between the two jugs, we can determine whether the target amount can be achieved.
+Perform an exhaustive search of all possible water configurations.
+By exploring every possible way to move water between the two jugs, we can determine whether
+the target amount can be achieved.
 
 */
 
@@ -108,6 +110,7 @@ const canMeasureWater = function (x, y, target) {
     states.add(`${Math.min(x, b + a)}-${b < x - a ? 0 : b - (x - a)}`); // Pour from y-jug to x-jug
     states.add(`${a + b < y ? 0 : a - (y - b)}-${Math.min(b + a, y)}`); // Pour from x-jug to y-jug
 
+    // Same as processing a cell in a grid and then, exploring all its directions
     for (const state of states) {
       const [newA, newB] = state.split('-').map(Number);
       // Same as: const [newA, newB] = state.split('-').map(st => Number(st));
