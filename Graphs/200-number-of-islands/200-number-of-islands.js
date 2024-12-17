@@ -98,7 +98,27 @@ const numIslands = function (grid) {
 This BFS approach ensures that all cells of each island are visited and counted
 while avoiding revisiting cells that are part of previously explored islands.
 The time complexity is O(m * n), where m and n are the dimensions of the grid,
-and the space complexity is also O(m * n) due to the visited set and the BFS queue.
+and the space complexity is O(min(m, n)) because in worst case where the
+grid is filled with lands, the size of queue can grow up to min(m, n).
+
+The key intuition is about the "expansion pattern" of BFS in a grid:
+
+Imagine a grid that's very rectangular - say 3 rows × 1000 columns
+When you start BFS from a cell in the middle, the queue's expansion forms a "diamond" shape
+The width of this diamond is constrained by the SMALLER dimension of the grid
+
+Visualization:
+.....Q.....
+....QXXXQ...
+...QXXXXXQ..
+....QXXXXXQ.
+.....Q.....
+Key points:
+
+The queue's size at any moment is proportional to the SMALLER grid dimension
+Even if the grid is 3×1000, the queue won't grow beyond a width of 3
+The expansion is geometrically limited by the shorter side
+Constants like initial queue size or processing overhead don't change this fundamental constraint
 
 */
 
