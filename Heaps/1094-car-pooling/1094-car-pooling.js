@@ -201,18 +201,14 @@ Overall, the time complexity is O(nlogn).
 
 Space Complexity
 
-Storage for Trips:
-We store the trips array, which requires O(n) space.
 Priority Queue Storage:
-The priority queue stores elements corresponding to the trips. In the worst case, it can store up to
-n elements.
+The priority queue stores elements corresponding to the trips.
+In the worst case, it can store up to n elements.
 Therefore, the space required for the heap is O(n).
 
 Summarizing the space complexity:
 
-Storage for trips: O(n)
 Priority queue storage: O(n)
-Overall, the space complexity is
-O(n).
+Overall, the space complexity is O(n).
 
 */
