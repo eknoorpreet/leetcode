@@ -45,12 +45,69 @@ Try to assign each job to different workers.
 After exploring a particular assignment, it backtracks to try other possibilities.
 This ensures all possible distributions are considered.
 
+What Happens in the Recursive Calls?
+
+At Each Level:
+You’re assigning the current job (jobs[i]) to one of the workers (j).
+After assigning the job, you recursively move to the next job (i + 1) using backtrack(i + 1).
+
+Exploration of Assignments:
+The loop iterates over all workers (j = 0 to k - 1).
+Each worker tries taking the current job, updating their workload (workers[j] += jobs[i]).
+After exploring this possibility, you undo the assignment (workers[j] -= jobs[i]) to backtrack and try other combinations.
+
+Base Case:
+When all jobs are assigned (i === jobs.length), we calculate the maximum workload (Math.max(...workers)) and update the result if this workload is better (smaller).
+
+Gives TLE
+*/
+
+const minimumTimeRequired0 = function (jobs, k) {
+  let minMaxWorkTime = Number.MAX_VALUE;
+  // Represents the total time assigned to each worker at a given point.
+  const workers = Array(k).fill(0);
+  const backtrack = (i) => {
+    // Base case: All jobs have been assigned
+    if (i === jobs.length) {
+      // Find maximum working time among all workers
+      const maxWorkTime = Math.max(...workers);
+      // Update the minimum maximum working time
+      minMaxWorkTime = Math.min(minMaxWorkTime, maxWorkTime);
+      return;
+    }
+
+    // Try assigning current job to each worker
+    for (let j = 0; j < k; j++) {
+      // Assign job to current worker
+      workers[j] += jobs[i];
+      // Recursively assign next job
+      backtrack(i + 1);
+      // Backtrack: Remove job assignment
+      workers[j] -= jobs[i];
+    }
+  };
+  // Start DFS from first job
+  backtrack(0);
+  return minMaxWorkTime;
+};
+
+/*
+
 Optimization Techniques
 
 Pruning Technique 1 - Avoiding Redundant Explorations:
 
-seen.has(workers[j]) prevents exploring identical worker load configurations.
+seen.has(workers[j]) prevents duplicate assignments to workers with the same workload.
 This reduces unnecessary recursive calls.
+
+Without seen:
+Imagine two workers have the same workload (e.g., both 0). Assigning a job to one worker and then to the other results in identical states. This creates redundant calculations, which wastes time.
+
+With seen:
+Before assigning a job to a worker (j), you check:
+if (seen.has(workers[j])) continue
+This ensures you only assign the job to one of the workers with the same workload during the current recursive step.
+The set seen keeps track of workloads you've already tried for this job.
 
 
 Pruning Technique 2 - Early Termination:
@@ -60,14 +117,17 @@ This significantly reduces the search space.
 
 */
 
-const minimumTimeRequired0 = function (jobs, k) {
-  let result = Number.MAX_VALUE;
+const minimumTimeRequired1 = function (jobs, k) {
+  let minMaxWorkTime = Number.MAX_VALUE;
+  // Represents the total time assigned to each worker at a given point.
   const workers = Array(k).fill(0);
   const backtrack = (i) => {
     // Base case: All jobs have been assigned
     if (i === jobs.length) {
+      // Find maximum working time among all workers
+      const maxWorkTime = Math.max(...workers);
       // Update the minimum maximum working time
-      result = Math.min(result, Math.max(...workers));
+      minMaxWorkTime = Math.min(minMaxWorkTime, maxWorkTime);
       return;
     }
     // Optimization: Track seen worker loads to avoid redundant assignments
@@ -80,7 +140,7 @@ const minimumTimeRequired0 = function (jobs, k) {
 
       // Pruning technique 2: Avoid unnecessary explorations
       // If adding this job would exceed current best result
-      if (workers[j] + jobs[i] >= result) continue;
+      if (workers[j] + jobs[i] >= minMaxWorkTime) continue;
       // Mark this worker load as seen
       seen.add(workers[j]);
       // Assign job to current worker
@@ -93,7 +153,7 @@ const minimumTimeRequired0 = function (jobs, k) {
   };
   // Start DFS from first job
   backtrack(0);
-  return result;
+  return minMaxWorkTime;
 };
 
 /*
@@ -105,7 +165,7 @@ k is the number of workers
 At each step, we try to assign the current job to any of k workers
 The recursive tree explores all possible job assignments
 For each job, we have k choices
-Total number of recursive calls ≈ k^n
+Total number of recursive calls ≈ k.k.k. ... n times => k^n
 
 Space Complexity: O(n)
 
@@ -124,10 +184,16 @@ Binary search can be applied to optimization problems with a clear search space
 
 Instead of exhaustively trying all distributions, we use binary search to find the minimum possible maximum working time.
 The search range is between the maximum single job time and the total job time.
+left (minimum bound): The largest single job. No worker can take on less than this because at least one worker must handle the largest job.
+right (maximum bound): The sum of all jobs. This is the worst case where one worker does all the jobs.
+
+We use binary search to narrow down the range between left and right to find the minimum possible maximum working time.
+
 
 Greedy Distribution with Backtracking
 
-Sort jobs in descending order to optimize initial distribution
+Sort jobs in descending order to optimize initial distribution. Why? Assigning the largest jobs first reduces the likelihood of exceeding the maximum working time. This optimization improves the performance of the backtracking step
+
 Use a backtracking method to check if jobs can be distributed within a given limit
 
 
@@ -150,9 +216,8 @@ const minimumTimeRequired = function (jobs, k) {
 
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    // console.log(left, right, mid)
 
-    // Check if it's possible to distribute jobs with max working 'mid'
+    // Check if it's possible to distribute jobs with max working 'mid' (candidate maximum time)
     if (canDistribute(jobs, k, mid)) {
       // If possible, try to reduce max time
       right = mid;
@@ -193,6 +258,8 @@ const backtrack = (jobs, i, workers, limit) => {
     workers[j] -= jobs[i];
 
     // Optimization: if worker is empty after backtracking, no need to try further
+    // If jobs[i] couldn't be assigned when worker j (the current worker) is empty, then assigning
+    // jobs[i] to any subsequent worker j+1,j+2,… will also fail.
     if (workers[j] === 0) break;
   }
 
