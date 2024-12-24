@@ -148,7 +148,25 @@ Time and Space Complexity:
 Insert: O(m) time, where m is the length of the word
 Search: O(m) time
 StartsWith: O(m) time
-Space Complexity: O(26n) in the worst case, where n is the number of words (with 26 representing alphabet size)
+Space Complexity: O(26*n) in the worst case, where n is the number of words (with 26
+representing alphabet size)
+
+Advantages of trie:
+
+1. Prefix Operations Are Extremely Fast
+
+Checking if a string is a prefix of any word in the dictionary is O(m) where m is the prefix length
+This makes tries ideal for:
+
+Autocomplete features
+Spell checkers
+IP routing tables
+Phone directories
+
+2. Space Efficiency for Common Prefixes
+
+Words with common prefixes share storage
+For example, storing "car", "cat", "catch" only needs to store "c-a" once.
 
 */
 
