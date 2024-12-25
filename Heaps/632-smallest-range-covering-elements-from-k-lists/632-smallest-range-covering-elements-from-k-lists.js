@@ -136,6 +136,68 @@ class MyPriorityQueue {
 
 /*
 
+At any moment, we need to select one number from each list. So, to find the smallest range,
+we need to minimize the difference between the largest and smallest numbers chosen at each step.
+The important point here is that, at any time, our range is defined by the smallest number chosen
+and the largest number chosen.
+
+So we need to select the smallest number among the current numbers picked from each list and
+move forward by choosing the next number from the same list that gave us this smallest number.
+This makes sense because moving forward in any other list would only increase the range, which
+we want to avoid. We repeat this process of updating the smallest number and checking if the new
+range is smaller than our previously found range. If it is, we update the range.
+
+We continue this until we reach the end of one of the lists because, at that point, it’s no
+longer possible to select a number from each list.
+
+*/
+
+const smallestRange0 = (nums) => {
+  const k = nums.length;
+  // Stores the current index of each list
+  const indices = Array(k).fill(0);
+  // To track the smallest range
+  const rangeList = [0, Infinity];
+
+  while (true) {
+    let curMin = Infinity;
+    let curMax = -Infinity;
+    let minListIndex = 0;
+
+    // Find the current minimum and maximum values across the lists
+    for (let i = 0; i < k; i++) {
+      const currentElement = nums[i][indices[i]];
+
+      // Update the current minimum
+      if (currentElement < curMin) {
+        curMin = currentElement;
+        minListIndex = i;
+      }
+
+      // Update the current maximum
+      if (currentElement > curMax) {
+        curMax = currentElement;
+      }
+    }
+
+    // Update the range if a smaller one is found
+    if (curMax - curMin < rangeList[1] - rangeList[0]) {
+      rangeList[0] = curMin;
+      rangeList[1] = curMax;
+    }
+
+    // Move to the next element in the list that had the minimum value
+    indices[minListIndex]++;
+    if (indices[minListIndex] === nums[minListIndex].length) {
+      break;
+    }
+  }
+
+  return rangeList;
+};
+
+/*
+
   Approach: Min-Heap with Sliding Window Concept
   Key Intuition:
 
@@ -164,7 +226,7 @@ class MyPriorityQueue {
 
   */
 
-const smallestRange0 = function (nums) {
+const smallestRange = function (nums) {
   const pq = new MyPriorityQueue();
   let maxVal = Number.MIN_SAFE_INTEGER;
   let rangeStart = 0;
@@ -178,7 +240,14 @@ const smallestRange0 = function (nums) {
     maxVal = Math.max(maxVal, nums[i][0]);
   }
 
+  // At this point, we have one element from each list
+  // From these ekements, we can say we have the min (via min-heap) and max (tracked above) elements
+  // This gives us our initial range
+
   // Continue until we can't proceed further
+  // We need exactly one element from EACH list in our heap
+  // If heap size < nums.length, we're missing a list
+  // Why? Because we need at least one number from each list in our range
   while (pq.values.length === nums.length) {
     // Get the minimum element
     const { val: minVal, listIndex, elementIndex } = pq.dequeue().val;
@@ -207,37 +276,7 @@ const smallestRange0 = function (nums) {
       break;
     }
   }
-
   return [rangeStart, rangeEnd];
-};
-
-const smallestRange = function (nums) {
-  const pq = new MyPriorityQueue();
-  let start = 0;
-  let end = Infinity;
-  let maxVal = -Infinity;
-
-  for (let i = 0; i < nums.length; i++) {
-    pq.enqueue({ val: nums[i][0], listIndex: i, elementIndex: 0 }, nums[i][0]);
-    maxVal = Math.max(maxVal, nums[i][0]);
-  }
-
-  while (pq.values.length === nums.length) {
-    const { val: minVal, listIndex, elementIndex } = pq.dequeue().val;
-    if (maxVal - minVal < end - start) {
-      start = minVal;
-      end = maxVal;
-    }
-    if (elementIndex + 1 < nums[listIndex].length) {
-      const nextVal = nums[listIndex][elementIndex + 1];
-      pq.enqueue(
-        { val: nextVal, listIndex, elementIndex: elementIndex + 1 },
-        nextVal
-      );
-      maxVal = Math.max(maxVal, nextVal);
-    }
-  }
-  return [start, end];
 };
 
 /*
