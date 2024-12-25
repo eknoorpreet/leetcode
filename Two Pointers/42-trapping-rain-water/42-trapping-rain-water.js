@@ -31,6 +31,12 @@ n == height.length
 
 /*
 
+How Water Gets Trapped:
+
+Water gets trapped between higher elevations
+Each unit of water needs a higher bar on both left AND right sides to be trapped
+The amount of water at any position depends on the minimum of max heights from left and right
+
 We can use a (monotonic decreasing) stack to keep track of the bars that are bounded by longer bars and hence, may store water. Using the stack, we can do the calculations in only one iteration.
 
 We add the index of the bar to the stack if bar is smaller than or equal to the bar at top of stack, which means that the current bar is bounded by the previous bar in the stack. If we found a bar longer than that at the top, we are sure that the bar at the top of the stack is bounded by the current bar and a previous bar in the stack, hence, we can pop it and add resulting trapped water to ans.
@@ -55,6 +61,8 @@ const trap0 = function (height) {
         // previousGreater and nextGreater represent the boundaries to trap the water
         let h = Math.min(previousGreater, nextGreater) - height[stackTop];
         // width is the space between next greater and previous greater element
+        // stack.at(-1) is the index of previousGreater (should not be included)
+        // We want the index of the recently popped element => stack.at(-1) + 1
         let w = i - (stack.at(-1) + 1);
 
         count += h * w;
@@ -70,28 +78,29 @@ const trap0 = function (height) {
 
 /*
 
- Two-pointer technique that calculates water trapped at each position by comparing the current height with the maximum height seen from both left and right sides.
+Two-pointer technique that calculates water trapped at each position by comparing the current height with the maximum height seen from both left and right sides.
 
- Key Principles:
+Key Principles:
 
- Water can be trapped between higher walls on both sides
- The amount of water at any position depends on the minimum of left and right max heights
- Water above a bar = (min(leftMax, rightMax) - current bar height)
+Water can be trapped between higher walls on both sides
+The amount of water at any position depends on the minimum of left and right max heights
+Water above a bar = (min(leftMax, rightMax) - current bar height)
 
- Move the pointer with the smaller height
+Move the pointer with the smaller height
 
- Why Move the Shorter Pointer?
+Why Move the Shorter Pointer?
 
- Consider two walls:
+Consider two walls:
 
- On the left: a wall of height 1
- On the right: a wall of height 3
+On the left: a wall of height 1
+On the right: a wall of height 3
 
- We move the pointer of the shorter wall (height 1) because:
+We move the pointer of the shorter wall (height 1) because:
 
- The water trapped at any position depends on the smaller of the two wall heights
- By moving the shorter pointer, we have a chance of finding a taller wall that could potentially trap more water
- */
+The water trapped at any position depends on the smaller of the two wall heights
+By moving the shorter pointer, we have a chance of finding a taller wall that could potentially trap more water
+
+*/
 
 const trap = function (height) {
   let left = 0;
