@@ -84,14 +84,14 @@ const exist = function (board, word) {
 /*
 
 Complexity Analysis
-Time Complexity: O(M * N * 3 L), where N is the number of cells in the board and L is the length of the word to be matched.
+
+Time Complexity: O(M * N * 3 L), where M * N is the number of cells in the board and L is the length of the word to be matched.
 
 For the backtracking function, initially we could have at most 4 directions to explore, but further the choices are reduced into 3 (since we won't go back to where we come from).
-As a result, the execution trace after the first step could be visualized as a 3-nary tree, each of the branches represent a potential exploration in the corresponding direction. Therefore, in the worst case, the total number of invocation would be the number of nodes in a full 3-nary tree, which is about 3
-L
- .
+As a result, the execution trace after the first step could be visualized as a 3-nary tree, each of the branches represent a potential exploration in the corresponding direction. Therefore, in the worst case, the total number of invocation would be the number of nodes in a full 3-nary tree, which is
+about 3 L.
 
-We iterate through the board for backtracking, i.e. there could be N times invocation for the backtracking function in the worst case.
+We iterate through the board for backtracking, i.e. there could be M * N times invocation for the backtracking function in the worst case.
 
 As a result, overall the time complexity of the algorithm would be O(M * N * 3 L).
 
