@@ -55,8 +55,8 @@ const lengthOfLongestSubstring = function (s) {
     // have 1 freq of character (i.e. exclude that character from beginning)
     // get its index via map.get(s[end]) and start from next
     if (map.has(s[end])) {
-      // important! Why not set start to map.get(s[end]) + 1?
-      // Consider 'abccad'. At 2nd 'c', we move start to 3. At 'a', we move start to ... 1 => wrong!
+      // important! Why not always set start to map.get(s[end]) + 1?
+      // Consider 'abccad'. At 2nd 'c', we move 'start' to 3. At 'a', we move start to ... 1 => wrong!
       // Since map.get('a') + 1 (1) < start (3), that character is not present in our window (twice)
       // => no need to slide!
       start = Math.max(start, map.get(s[end]) + 1);
@@ -69,5 +69,5 @@ const lengthOfLongestSubstring = function (s) {
 
 lengthOfLongestSubstring('abcabcbb'); //3
 
-//TC: O(n): The for loop runs for n characters
-//SC: O(k), n = number of distinct characters in string; k <= n but since characters are 26 => O(1)
+// TC: O(n): The for loop runs for n characters
+// SC: O(k), n = number of distinct characters in string; k <= n but since characters are 26 => O(1)
