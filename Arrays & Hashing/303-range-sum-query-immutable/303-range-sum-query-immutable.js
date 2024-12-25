@@ -85,6 +85,7 @@ const NumArray = function (nums) {
  */
 NumArray.prototype.sumRange = function (left, right) {
   let result = 0;
+  // We want to include nums[left], therefore, subtract the sum at this.prefix[left - 1]
   // Handle the case when left is the first element
   let leftSum = left > 0 ? this.prefix[left - 1] : 0;
   // Get the cumulative sum up to the right boundary
