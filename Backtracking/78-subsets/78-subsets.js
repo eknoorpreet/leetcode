@@ -118,9 +118,39 @@ Time Complexity: O(2^n)
 Each iteration doubles the number of subsets
 Total subsets: 2^n
 
-Space Complexity: O(2^n)
+Space Complexity: O(n)
 
-Stores all possible subsets
-Grows exponentially with input size
+"Each iteration doubles the number of subsets"
+
+Here’s the reasoning:
+
+Initialization:
+The process starts with result = [[]], which contains a single subset, the empty subset.
+For Each Number n in nums:
+
+The current subsets are iterated over.
+For every existing subset, a new subset is created by copying the subset and adding the current number n.
+
+Doubling Effect:
+Before processing a number n, let the number of subsets in result be 'size'. For each of these 'size'
+subsets, a new subset is created that includes n.
+This means the number of subsets after processing n becomes size + size (original subsets + newly
+created subsets), effectively doubling the total subsets.
+
+Example Walkthrough:
+
+Let nums = [1, 2, 3].
+Iteration 1 (Add 1):
+
+Start with result = [[]].
+Add 1 to each existing subset:
+New subsets: [1].
+result = [[], [1]] (2 subsets).
+Iteration 2 (Add 2):
+
+Start with result = [[], [1]].
+Add 2 to each existing subset:
+New subsets: [2] (from []) and [1, 2] (from [1]).
+result = [[], [1], [2], [1, 2]] (4 subsets).
 
 */
