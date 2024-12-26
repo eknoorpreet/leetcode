@@ -153,9 +153,9 @@ class MaxStack {
     this.stack = [];
     // A max heap to efficiently find the maximum element
     this.maxHeap = new MaxHeap();
-    // A decreasing counter is used to assign unique IDs to each element
+    // A counter is used to assign unique IDs to each element
     // This solves the problem of duplicate values by making each insertion unique
-    // Using a decreasing counter ensures that more recent items are prioritized in case of ties
+    // Using an increasing counter ensures that more recent items are prioritized in case of ties
     this.nextID = 0;
     // The set acts as a "marker" for elements that need to be removed from both the stack and heap
     this.softDeleted = new Set();
