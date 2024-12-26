@@ -36,12 +36,29 @@ nums is sorted in ascending order, and all the elements are unique.
  * @return {number}
  */
 
+/*
+
+Count Missing Numbers:
+
+At any index i, the total number of missing numbers up to
+nums[i] is:
+
+missing_count = nums[i] − (i + 1+ start)
+
+nums[i]: The actual number at index i
+i + 1 + start: The expected value at index i if there were no missing numbers, considering start as the baseline.
+
+After the binary search, left indicates the smallest index in the array where the count of missing numbers up to that point is greater than or equal to k.
+In other words, left tells us how far into the array we’ve gone to account for missing numbers.
+
+*/
+
 const missingElement = function (nums, k) {
   let left = 0;
   let right = nums.length - 1;
 
   // Establish the baseline for counting missing numbers
-  // (number just before the first element of the array)
+  // (number just before the first / smallest element of the array)
   // (Establishing our range)
   let start = nums[left] - 1;
 
@@ -52,19 +69,19 @@ const missingElement = function (nums, k) {
     // mid + 1 + start: What the number should be if no numbers were missing
     const expectedMidElement = start + mid + 1;
     const missingCount = nums[mid] - expectedMidElement;
-    console.log(missingCount);
-    // If missing numbers are less than k, move right
+    // If missing numbers are less than k, we want to search in the right half
     if (missingCount < k) {
       left = mid + 1;
     } else {
-      // If missing numbers are more than or equal to k, move left
+      // If missing numbers are more than or equal to k, we want to search in the left half
       right = mid - 1;
     }
   }
+  // start: The baseline to adjust our final number
   // left: The index where we stop
   // k: The kth missing number
-  // start: The baseline to adjust our final number
-  return left + k + start;
+
+  return start + left + k;
 };
 
 /*
