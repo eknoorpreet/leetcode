@@ -22,11 +22,9 @@ const longestConsecutive0 = (nums) => {
   let maxSeqLength = 0;
   for (const num of nums) {
     //O(n)
-    let currentNum = num;
     let currSeqLength = 1;
-    while (arrayContains(nums, currentNum + 1)) {
+    while (arrayContains(nums, num + currSeqLength)) {
       //O(n)
-      currentNum += 1;
       currSeqLength += 1;
     }
     maxSeqLength = Math.max(maxSeqLength, currSeqLength);
