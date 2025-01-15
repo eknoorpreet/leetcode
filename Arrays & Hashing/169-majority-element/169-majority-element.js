@@ -55,21 +55,24 @@ const majorityElement1 = function (nums) {
 
 const majorityElement = function (nums) {
   let candidate = nums[0];
-  let count = 1;
+  let count = 0;
 
   // Phase 1: Find a candidate for the majority element
   // The idea here is to track a "potential" majority element that can dominate the rest of the elements.
-  for (let i = 1; i < nums.length; i++) {
-    //if count becomes 0, update the candidate to the current element and reset count to 1.
+  for (let i = 0; i < nums.length; i++) {
+    // If count becomes 0, the curr candidate is not the result since another one (curr element)
+    // has the same frequency as the curr candidate
+    // Update the candidate to the current element and reset count to 1.
+    // Reset count (for curr element) to 1
     if (count === 0) {
       candidate = nums[i];
       count = 1;
     }
-    //If the current element is the same as the candidate, increment count.
+    // If the current element is the same as the candidate, increment count.
     else if (candidate === nums[i]) {
       count++;
     }
-    //If the current element is different from the candidate, decrement count.
+    // If the current element is different from the candidate, decrement count.
     else {
       count--;
     }
@@ -84,7 +87,7 @@ const majorityElement = function (nums) {
     }
   }
 
-  //Verify if the candidate found in Phase 1 is indeed the majority element. If it is, it will satisfy the majority condition (appearing more than ⌊n / 2⌋ times).
+  // Verify if the candidate found in Phase 1 is indeed the majority element. If it is, it will satisfy the majority condition (appearing more than ⌊n / 2⌋ times).
   if (count > Math.floor(nums.length / 2)) {
     return candidate;
   }
